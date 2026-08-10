@@ -1,0 +1,108 @@
+[
+  {
+    "id": "p1",
+    "name": "Maria Santos",
+    "phone": "0917 234 5678",
+    "email": "maria.santos@gmail.com",
+    "rating": 4.9,
+    "totalBookings": 86,
+    "totalSpent": 18240,
+    "status": "Active",
+    "identityVerified": true,
+    "preferredPayment": "GCash",
+    "homeLocation": "Cubao Farmers Market",
+    "workLocation": "Uptown BGC",
+    "savedPlaces": [
+      { "id": "sp1", "label": "Home", "name": "Home", "address": "Brgy. Socorro, Cubao, Quezon City", "coordinates": { "latitude": 14.6194, "longitude": 121.0497 } },
+      { "id": "sp2", "label": "Work", "name": "Work", "address": "9th Ave, BGC, Taguig", "coordinates": { "latitude": 14.5484, "longitude": 121.0495 } }
+    ]
+  },
+  {
+    "id": "p2",
+    "name": "Juan Dela Cruz",
+    "phone": "0918 876 4321",
+    "email": "juan.delacruz@yahoo.com",
+    "rating": 4.8,
+    "totalBookings": 142,
+    "totalSpent": 28640,
+    "status": "Active",
+    "identityVerified": true,
+    "preferredPayment": "Cash",
+    "homeLocation": "Greenhills Shopping Center",
+    "workLocation": "Ortigas Center",
+    "savedPlaces": [
+      { "id": "sp3", "label": "Home", "name": "Home", "address": "Greenhills, San Juan", "coordinates": { "latitude": 14.6093, "longitude": 121.0451 } },
+      { "id": "sp4", "label": "Work", "name": "Work", "address": "Exchange Road, Pasig City", "coordinates": { "latitude": 14.5844, "longitude": 121.0608 } }
+    ]
+  },
+  {
+    "id": "p3",
+    "name": "Angela Reyes",
+    "phone": "0920 445 1122",
+    "email": "angela.reyes@gmail.com",
+    "rating": 4.7,
+    "totalBookings": 54,
+    "totalSpent": 9870,
+    "status": "Active",
+    "identityVerified": true,
+    "preferredPayment": "Card",
+    "homeLocation": "Intramuros",
+    "workLocation": "Manila Baywalk",
+    "savedPlaces": [
+      { "id": "sp5", "label": "Home", "name": "Home", "address": "Intramuros, Manila", "coordinates": { "latitude": 14.5906, "longitude": 120.9761 } },
+      { "id": "sp6", "label": "Work", "name": "Work", "address": "Roxas Blvd, Manila", "coordinates": { "latitude": 14.5617, "longitude": 120.9804 } }
+    ]
+  },
+  {
+    "id": "p4",
+    "name": "Paolo Mendoza",
+    "phone": "0919 556 7788",
+    "email": "paolo.mendoza@gmail.com",
+    "rating": 4.9,
+    "totalBookings": 67,
+    "totalSpent": 12480,
+    "status": "Active",
+    "identityVerified": true,
+    "preferredPayment": "Wallet",
+    "homeLocation": "Uptown BGC",
+    "workLocation": "Bonifacio High Street",
+    "savedPlaces": [
+      { "id": "sp7", "label": "Home", "name": "Home", "address": "9th Ave cor 38th St, Taguig", "coordinates": { "latitude": 14.5484, "longitude": 121.0495 } }
+    ]
+  },
+  {
+    "id": "p5",
+    "name": "Sofia Garcia",
+    "phone": "0915 223 4455",
+    "email": "sofia.garcia@gmail.com",
+    "rating": 4.8,
+    "totalBookings": 93,
+    "totalSpent": 15720,
+    "status": "Active",
+    "identityVerified": true,
+    "preferredPayment": "GCash",
+    "homeLocation": "Banawe Street",
+    "workLocation": "SM North EDSA",
+    "savedPlaces": [
+      { "id": "sp8", "label": "Home", "name": "Home", "address": "Banawe Ave, Quezon City", "coordinates": { "latitude": 14.6268, "longitude": 121.0035 } },
+      { "id": "sp9", "label": "Work", "name": "Work", "address": "North Ave, Quezon City", "coordinates": { "latitude": 14.6535, "longitude": 121.0324 } }
+    ]
+  },
+  {
+    "id": "p6",
+    "name": "Katrina Villanueva",
+    "phone": "0921 889 2233",
+    "email": "katrina.villanueva@gmail.com",
+    "rating": 4.7,
+    "totalBookings": 38,
+    "totalSpent": 6450,
+    "status": "Active",
+    "identityVerified": true,
+    "preferredPayment": "Card",
+    "homeLocation": "Cubao Farmers Market",
+    "workLocation": "Pasig City Hall",
+    "savedPlaces": [
+      { "id": "sp10", "label": "Home", "name": "Home", "address": "P. Tuazon Blvd, Cubao, QC", "coordinates": { "latitude": 14.6194, "longitude": 121.0497 } }
+    ]
+  }
+]

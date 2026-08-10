@@ -1,0 +1,74 @@
+[
+  {
+    "id": "p2",
+    "role": "passenger",
+    "name": "Juan Dela Cruz",
+    "email": "juan.delacruz@yahoo.com",
+    "phone": "0918 876 4321",
+    "password": "hatodgo123",
+    "createdAt": "2025-11-03T08:00:00"
+  },
+  {
+    "id": "p1",
+    "role": "passenger",
+    "name": "Maria Santos",
+    "email": "maria.santos@gmail.com",
+    "phone": "0917 234 5678",
+    "password": "hatodgo123",
+    "createdAt": "2026-01-12T09:30:00"
+  },
+  {
+    "id": "p3",
+    "role": "passenger",
+    "name": "Angela Reyes",
+    "email": "angela.reyes@gmail.com",
+    "phone": "0920 445 1122",
+    "password": "hatodgo123",
+    "createdAt": "2026-02-21T14:00:00"
+  },
+  {
+    "id": "p4",
+    "role": "passenger",
+    "name": "Paolo Mendoza",
+    "email": "paolo.mendoza@gmail.com",
+    "phone": "0919 556 7788",
+    "password": "hatodgo123",
+    "createdAt": "2025-12-15T10:15:00"
+  },
+  {
+    "id": "d1",
+    "role": "driver",
+    "name": "Arman Castillo",
+    "email": "arman.castillo@gmail.com",
+    "phone": "0917 112 3344",
+    "password": "hatodgo123",
+    "createdAt": "2025-03-14T07:00:00"
+  },
+  {
+    "id": "d2",
+    "role": "driver",
+    "name": "Ronald Fernandez",
+    "email": "ronald.fernandez@gmail.com",
+    "phone": "0918 221 4455",
+    "password": "hatodgo123",
+    "createdAt": "2025-05-02T07:00:00"
+  },
+  {
+    "id": "d4",
+    "role": "driver",
+    "name": "Dennis Aquino",
+    "email": "dennis.aquino@gmail.com",
+    "phone": "0916 445 8899",
+    "password": "hatodgo123",
+    "createdAt": "2025-02-25T07:00:00"
+  },
+  {
+    "id": "d6",
+    "role": "driver",
+    "name": "Noel Antonio",
+    "email": "noel.antonio@gmail.com",
+    "phone": "0915 667 2233",
+    "password": "hatodgo123",
+    "createdAt": "2025-08-11T07:00:00"
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "HatodGo",
+    "slug": "hatodgo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "hatodgo",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "ph.hatodgo.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "HatodGo uses your location to find nearby riders and track your trips."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F97316",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "package": "ph.hatodgo.app",
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow HatodGo to use your location to find nearby riders and track trips."
+        }
+      ],
+      [
+        "@rnmapbox/maps",
+        {
+          "accessToken": "pk.PUT_YOUR_MAPBOX_PUBLIC_TOKEN_HERE"
+        }
+      ],
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F97316"
+        }
+      ]
+    ]
+  }
+}

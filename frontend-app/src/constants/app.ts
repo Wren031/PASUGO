@@ -1,0 +1,30 @@
+export const APP = {
+  name: 'HatodGo',
+  tagline: 'Your Fast, Safe, and Affordable Ride Across the City',
+  companyName: 'HatodGo Transport Solutions Inc.',
+  email: 'support@hatodgo.ph',
+  phone: '+63 2 8888 2468',
+  hotline: '0917 888 2468',
+  address: '12F Ortigas Tower, Exchange Road, Ortigas Center, Pasig City, Metro Manila 1605',
+  website: 'hatodgo.ph',
+  currency: 'PHP',
+  currencySymbol: '\u20B1',
+  version: '1.0.0',
+} as const;
+
+export const BRAND_COLORS = {
+  primary: '#F97316',
+  primaryDark: '#C2410C',
+  primarySoft: '#FFEDD5',
+  primaryLighter: '#FDBA74',
+  background: '#F8FAFC',
+  surface: '#FFFFFF',
+  ink: '#0F172A',
+  inkSecondary: '#475569',
+  inkMuted: '#94A3B8',
+  border: '#E2E8F0',
+  success: '#22C55E',
+  danger: '#EF4444',
+  warning: '#F59E0B',
+  info: '#3B82F6',
+} as const;

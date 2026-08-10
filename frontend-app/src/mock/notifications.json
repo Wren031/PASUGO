@@ -1,0 +1,16 @@
+[
+  { "id": "n1", "userId": "d1", "type": "ride-request", "title": "New ride request", "message": "Maria Santos wants to ride from SM North EDSA to Trinoma Mall.", "createdAt": "2026-08-07T11:04:00", "read": true },
+  { "id": "n2", "userId": "d1", "type": "earning", "title": "Trip completed", "message": "You earned ₱ 64.00 net from trip B-20841.", "createdAt": "2026-08-07T11:11:40", "read": false },
+  { "id": "n3", "userId": "d1", "type": "system", "title": "Weekly payout released", "message": "Your earnings for Jul 28 - Aug 3 were sent to your bank account.", "createdAt": "2026-08-04T09:00:00", "read": true },
+  { "id": "n4", "userId": "d1", "type": "system", "title": "New safety feature", "message": "Share your live trip with your loved ones using the new safety link.", "createdAt": "2026-08-01T10:00:00", "read": true },
+  { "id": "n5", "userId": "p2", "type": "booking", "title": "Driver on the way", "message": "Jomar Reyes is heading to Greenhills Shopping Center to pick you up.", "createdAt": "2026-08-07T10:36:20", "read": false },
+  { "id": "n6", "userId": "p2", "type": "booking", "title": "Trip completed", "message": "Your trip from Ortigas Center to Greenhills Shopping Center is complete. Thanks for riding with HatodGo!", "createdAt": "2026-08-06T18:10:20", "read": true },
+  { "id": "n7", "userId": "p2", "type": "promotion", "title": "Weekend promo: 20% off", "message": "Get 20% off your next ride this weekend. Code: WEEKEND20.", "createdAt": "2026-08-07T08:00:00", "read": false },
+  { "id": "n8", "userId": "p2", "type": "system", "title": "Welcome to HatodGo", "message": "Complete your profile to enjoy faster booking and exclusive perks.", "createdAt": "2026-08-07T10:30:00", "read": true },
+  { "id": "n9", "userId": "p1", "type": "booking", "title": "Trip completed", "message": "Your trip from SM North EDSA to Trinoma Mall is complete. Rate Arman Castillo!", "createdAt": "2026-08-07T11:11:40", "read": false },
+  { "id": "n10", "userId": "p1", "type": "promotion", "title": "Refer a friend", "message": "Invite a friend and you both get ₱ 50 off your next ride.", "createdAt": "2026-08-06T12:00:00", "read": true },
+  { "id": "n11", "userId": "d2", "type": "ride-request", "title": "New ride request", "message": "Katrina Villanueva wants to ride from Cubao Farmers Market to Pasig City Hall.", "createdAt": "2026-08-07T10:48:00", "read": true },
+  { "id": "n12", "userId": "d2", "type": "earning", "title": "Trip completed", "message": "You earned ₱ 176.00 net from trip B-20839.", "createdAt": "2026-08-07T11:13:20", "read": false },
+  { "id": "n13", "userId": "d2", "type": "system", "title": "High demand area", "message": "Cubao area is currently busy. Go online to catch more trips.", "createdAt": "2026-08-07T09:00:00", "read": true },
+  { "id": "n14", "userId": "p6", "type": "booking", "title": "Trip completed", "message": "Your trip from Cubao Farmers Market to Pasig City Hall is complete. Rate Ronald Fernandez!", "createdAt": "2026-08-07T11:13:20", "read": false }
+]
