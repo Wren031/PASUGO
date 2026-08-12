@@ -1,24 +1,24 @@
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
+import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-import { Modal } from './Modal';
+import { Screen } from '@/components/screen/Screen';
+import { ScreenHeader } from '@/components/screen/ScreenHeader';
 import { Input } from '@/components/inputs/Input';
 import { LANDMARKS } from '@/constants/maps';
 import { haversineKm } from '@/utils/geo';
-import type { Landmark } from '@/constants/maps';
 import type { PickedLocation } from '@/components/inputs/LocationInput';
-import type { SavedPlace } from '@/types/passenger';
+import type { PassengerStackParamList } from '@/navigation/types';
 import { cn } from '@/utils/cn';
 
-interface LocationPickerModalProps {
-  visible: boolean;
-  onClose: () => void;
-  onSelect: (location: PickedLocation) => void;
-  savedPlaces?: SavedPlace[];
-}
+type Route = RouteProp<PassengerStackParamList, 'SelectLocationScreen'>;
 
-export function LocationPickerModal({ visible, onClose, onSelect, savedPlaces = [] }: LocationPickerModalProps) {
+export function SelectLocationScreen() {
+  const navigation = useNavigation();
+  const route = useRoute<Route>();
+  const { target, savedPlaces = [] } = route.params;
+
   const [query, setQuery] = useState('');
   const [locating, setLocating] = useState(false);
 
@@ -33,6 +33,11 @@ export function LocationPickerModal({ visible, onClose, onSelect, savedPlaces = 
     );
   }, [query, savedPlaces]);
 
+  const selectLocation = (location: PickedLocation) => {
+    route.params.onSelect?.(location);
+    navigation.goBack();
+  };
+
   const useCurrentLocation = async () => {
     setLocating(true);
     try {
@@ -43,20 +48,21 @@ export function LocationPickerModal({ visible, onClose, onSelect, savedPlaces = 
         const distance = haversineKm(position.coords, landmark.coordinates);
         return distance < best.distance ? { landmark, distance } : best;
       }, { landmark: LANDMARKS[0], distance: Number.POSITIVE_INFINITY });
-      onSelect(nearest.landmark);
+      selectLocation(nearest.landmark);
     } catch {
-      // Location unavailable - keep the sheet open
+      // Location unavailable - keep the screen open
     } finally {
       setLocating(false);
     }
   };
 
   return (
-    <Modal visible={visible} onClose={onClose} animationType="slide" className="max-h-[80%] p-0">
-      <View className="border-b border-line p-4 pb-3">
-        <Text className="text-lg font-bold text-ink">Choose a location</Text>
-      </View>
-      <View className="p-4 pb-2">
+    <Screen>
+      <ScreenHeader
+        title="Choose a location"
+        subtitle={target === 'pickup' ? 'Pickup point' : 'Destination'}
+      />
+      <View className="px-4 pb-2 pt-3">
         <Input
           value={query}
           onChangeText={setQuery}
@@ -84,14 +90,20 @@ export function LocationPickerModal({ visible, onClose, onSelect, savedPlaces = 
       <FlatList
         data={results}
         keyExtractor={(item) => item.id}
-        className="max-h-[320px]"
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 16 }}
         keyboardShouldPersistTaps="handled"
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => onSelect(item)}
+            onPress={() => selectLocation(item)}
             className="flex-row items-center gap-3 border-b border-line px-4 py-3.5 active:bg-slate-50"
           >
-            <View className={cn('h-9 w-9 items-center justify-center rounded-full', 'label' in item ? 'bg-primary-soft' : 'bg-surface-muted')}>
+            <View
+              className={cn(
+                'h-9 w-9 items-center justify-center rounded-full',
+                'label' in item ? 'bg-primary-soft' : 'bg-surface-muted',
+              )}
+            >
               {'label' in item ? (
                 <Text className="text-[10px] font-bold text-primary-dark">{item.label}</Text>
               ) : (
@@ -105,6 +117,6 @@ export function LocationPickerModal({ visible, onClose, onSelect, savedPlaces = 
           </Pressable>
         )}
       />
-    </Modal>
+    </Screen>
   );
 }

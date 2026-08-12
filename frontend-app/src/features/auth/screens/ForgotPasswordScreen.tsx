@@ -9,6 +9,7 @@ import { forgotPasswordSchema, normalizePhone } from '../validation/auth-schema'
 import { authService } from '../services/auth-service';
 import { showToast } from '@/store/toast-store';
 import type { ForgotPasswordFormValues } from '../types';
+import React from 'react';
 
 export function ForgotPasswordScreen() {
   const {

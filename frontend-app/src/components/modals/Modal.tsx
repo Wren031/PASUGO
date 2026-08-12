@@ -8,14 +8,23 @@ interface ModalProps {
   children: ReactNode;
   className?: string;
   animationType?: 'fade' | 'slide' | 'none';
+  padded?: boolean;
 }
 
-export function Modal({ visible, onClose, children, className, animationType = 'fade' }: ModalProps) {
+export function Modal({ visible, onClose, children, className, animationType = 'fade', padded = true }: ModalProps) {
   return (
     <RNModal visible={visible} transparent animationType={animationType} onRequestClose={onClose} statusBarTranslucent>
-      <Pressable className="flex-1 items-center justify-center bg-black/50 px-6" onPress={onClose}>
-        <Pressable onPress={(event) => event.stopPropagation()}>
-          <View className={cn('w-full rounded-2xl bg-white p-5', className)}>{children}</View>
+      <Pressable className="flex-1 items-center justify-center bg-black/50 px-4 sm:px-6" onPress={onClose}>
+        <Pressable onPress={(event) => event.stopPropagation()} className="w-full max-w-lg overflow-hidden">
+          <View
+            className={cn(
+              'overflow-hidden rounded-2xl bg-white',
+              padded && 'p-4',
+              className,
+            )}
+          >
+            {children}
+          </View>
         </Pressable>
       </Pressable>
     </RNModal>

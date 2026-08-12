@@ -1,6 +1,8 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
 import type { Booking } from '@/types/booking';
 import type { AvailableDriver } from '@/types/booking';
+import type { SavedPlace } from '@/types/passenger';
+import type { PickedLocation } from '@/components/inputs/LocationInput';
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -17,6 +19,7 @@ export type PassengerTabParamList = {
 
 export type PassengerStackParamList = {
   PassengerTabs: NavigatorScreenParams<PassengerTabParamList> | undefined;
+  SelectLocationScreen: SelectLocationScreenParams;
   SearchDriver: { booking: Booking };
   DriverFound: { booking: Booking; driver: AvailableDriver };
   TripTracking: { booking: Booking; driver: AvailableDriver };
@@ -27,6 +30,12 @@ export type PassengerStackParamList = {
   SavedPlaces: undefined;
   EditProfile: undefined;
   Settings: undefined;
+};
+
+export type SelectLocationScreenParams = {
+  target: 'pickup' | 'dropoff';
+  savedPlaces?: SavedPlace[];
+  onSelect?: (location: PickedLocation) => void;
 };
 
 export type DriverTabParamList = {

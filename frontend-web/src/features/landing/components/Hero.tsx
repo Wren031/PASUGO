@@ -27,7 +27,7 @@ export default function Hero() {
             <span className="relative text-primary-500">
               Affordable
               <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 9" fill="none" aria-hidden>
-                <path d="M2 7C60 2 140 2 198 6" stroke="#FDBA74" strokeWidth="4" strokeLinecap="round" />
+                <path d="M2 7C60 2 140 2 198 6" stroke="  #FDBA74" strokeWidth="4" strokeLinecap="round" />
               </svg>
             </span>{' '}
             Ride Across the City

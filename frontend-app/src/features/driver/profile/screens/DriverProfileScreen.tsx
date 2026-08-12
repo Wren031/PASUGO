@@ -27,14 +27,13 @@ export function DriverProfileScreen() {
   const { data: driver } = useDriverProfile(user?.id ?? '');
   const [logoutOpen, setLogoutOpen] = useState(false);
 
-  const menuItems: { icon: keyof typeof Feather.glyphMap; label: string; onPress: () => void; danger?: boolean }[] = [
+  const menuItems: { icon: keyof typeof Feather.glyphMap; label: string; onPress: () => void }[] = [
     { icon: 'edit-2', label: 'Edit profile', onPress: () => navigation.navigate('DriverEditProfile') },
     { icon: 'truck', label: 'Vehicle & documents', onPress: () => navigation.navigate('DriverVehicle') },
     { icon: 'bar-chart-2', label: 'Earnings', onPress: () => navigation.navigate('Earnings') },
     { icon: 'list', label: 'Trip history', onPress: () => navigation.navigate('Trips') },
     { icon: 'star', label: 'Reviews', onPress: () => navigation.navigate('DriverReviews') },
     { icon: 'bell', label: 'Notifications', onPress: () => navigation.navigate('Notifications') },
-    { icon: 'log-out', label: 'Sign out', onPress: () => setLogoutOpen(true), danger: true },
   ];
 
   return (
@@ -86,12 +85,27 @@ export function DriverProfileScreen() {
               onPress={item.onPress}
               className={`flex-row items-center gap-3 px-4 py-4 active:bg-slate-50 ${index > 0 ? 'border-t border-line' : ''}`}
             >
-              <Feather name={item.icon} size={17} color={item.danger ? '#EF4444' : '#64748B'} />
-              <Text className={`flex-1 text-[14px] font-semibold ${item.danger ? 'text-danger' : 'text-ink'}`}>{item.label}</Text>
+              <View className="h-9 w-9 items-center justify-center rounded-full bg-surface-muted">
+                <Feather name={item.icon} size={16} color="#64748B" />
+              </View>
+              <Text className="flex-1 text-[14px] font-semibold text-ink">{item.label}</Text>
               <Feather name="chevron-right" size={17} color="#CBD5E1" />
             </Pressable>
           ))}
         </View>
+
+        <Pressable
+          onPress={() => setLogoutOpen(true)}
+          className="mt-4 flex-row items-center gap-3 rounded-2xl border border-danger/20 bg-danger-soft px-4 py-4 active:opacity-80"
+        >
+          <View className="h-9 w-9 items-center justify-center rounded-full bg-danger">
+            <Feather name="log-out" size={16} color="#FFFFFF" />
+          </View>
+          <View className="flex-1">
+            <Text className="text-[14px] font-bold text-danger">Sign out</Text>
+            <Text className="mt-0.5 text-[12px] text-red-700">End your session on this device</Text>
+          </View>
+        </Pressable>
 
         <Text className="mt-6 text-center text-[11px] text-ink-muted">HatodGo Driver v1.0.0</Text>
       </ScrollView>
@@ -102,6 +116,7 @@ export function DriverProfileScreen() {
         message="You will stop receiving ride requests."
         confirmLabel="Sign out"
         tone="danger"
+        icon={<Feather name="log-out" size={24} color="#EF4444" />}
         onCancel={() => setLogoutOpen(false)}
         onConfirm={() => {
           setLogoutOpen(false);

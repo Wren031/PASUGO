@@ -33,13 +33,12 @@ export function ProfileScreen() {
     { icon: 'briefcase', label: 'Work', value: passenger?.workLocation ?? 'Not set' },
   ];
 
-  const menuItems: { icon: keyof typeof Feather.glyphMap; label: string; onPress: () => void; danger?: boolean }[] = [
+  const menuItems: { icon: keyof typeof Feather.glyphMap; label: string; onPress: () => void }[] = [
     { icon: 'user', label: 'Edit profile', onPress: () => navigation.navigate('EditProfile') },
     { icon: 'map-pin', label: 'Saved places', onPress: () => navigation.navigate('SavedPlaces') },
     { icon: 'credit-card', label: 'Payment methods', onPress: () => navigation.navigate('Payments') },
     { icon: 'bell', label: 'Notifications', onPress: () => navigation.navigate('Notifications') },
     { icon: 'settings', label: 'Settings', onPress: () => navigation.navigate('Settings') },
-    { icon: 'log-out', label: 'Sign out', onPress: () => setLogoutOpen(true), danger: true },
   ];
 
   return (
@@ -87,12 +86,27 @@ export function ProfileScreen() {
               onPress={item.onPress}
               className={`flex-row items-center gap-3 px-4 py-4 active:bg-slate-50 ${index > 0 ? 'border-t border-line' : ''}`}
             >
-              <Feather name={item.icon} size={17} color={item.danger ? '#EF4444' : '#64748B'} />
-              <Text className={`flex-1 text-[14px] font-semibold ${item.danger ? 'text-danger' : 'text-ink'}`}>{item.label}</Text>
+              <View className="h-9 w-9 items-center justify-center rounded-full bg-surface-muted">
+                <Feather name={item.icon} size={16} color="#64748B" />
+              </View>
+              <Text className="flex-1 text-[14px] font-semibold text-ink">{item.label}</Text>
               <Feather name="chevron-right" size={17} color="#CBD5E1" />
             </Pressable>
           ))}
         </View>
+
+        <Pressable
+          onPress={() => setLogoutOpen(true)}
+          className="mt-4 flex-row items-center gap-3 rounded-2xl border border-danger/20 bg-danger-soft px-4 py-4 active:opacity-80"
+        >
+          <View className="h-9 w-9 items-center justify-center rounded-full bg-danger">
+            <Feather name="log-out" size={16} color="#FFFFFF" />
+          </View>
+          <View className="flex-1">
+            <Text className="text-[14px] font-bold text-danger">Sign out</Text>
+            <Text className="mt-0.5 text-[12px] text-red-700">End your session on this device</Text>
+          </View>
+        </Pressable>
 
         <View className="mt-6 items-center">
           <MaterialCommunityIcons name="motorbike" size={18} color="#94A3B8" />
@@ -106,6 +120,7 @@ export function ProfileScreen() {
         message="You will need to sign in again to book a ride."
         confirmLabel="Sign out"
         tone="danger"
+        icon={<Feather name="log-out" size={24} color="#EF4444" />}
         onCancel={() => setLogoutOpen(false)}
         onConfirm={() => {
           setLogoutOpen(false);

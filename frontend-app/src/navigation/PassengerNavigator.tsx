@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PassengerTabs } from './PassengerTabs';
+import { SelectLocationScreen } from '@/features/passenger/booking/screens/SelectLocationScreen';
 import { SearchDriverScreen } from '@/features/passenger/booking/screens/SearchDriverScreen';
 import { DriverFoundScreen } from '@/features/passenger/booking/screens/DriverFoundScreen';
 import { TripTrackingScreen } from '@/features/passenger/tracking/screens/TripTrackingScreen';
@@ -23,6 +24,7 @@ export function PassengerNavigator() {
       }}
     >
       <Stack.Screen name="PassengerTabs" component={PassengerTabs} />
+      <Stack.Screen name="SelectLocationScreen" component={SelectLocationScreen} />
       <Stack.Screen name="SearchDriver" component={SearchDriverScreen} />
       <Stack.Screen name="DriverFound" component={DriverFoundScreen} />
       <Stack.Screen name="TripTracking" component={TripTrackingScreen} options={{ gestureEnabled: false }} />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { authService } from '../services/auth-service';
+import React from 'react';
 
 interface DemoCredentialsProps {
   onFill: (phone: string, password: string) => void;

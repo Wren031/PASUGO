@@ -6,6 +6,7 @@ import { Feather } from '@expo/vector-icons';
 import { Logo } from '@/components/ui/Logo';
 import { IconButton } from '@/components/buttons/IconButton';
 import { KeyboardDismissButton } from '@/components/ui/KeyboardDismissButton';
+import React from 'react';
 
 interface AuthLayoutProps {
   title: string;
