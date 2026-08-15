@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  passenger
+  driver
+}
+
+enum AccountStatus {
+  Active
+  Suspended
+  Pending
+  Inactive
+}
+
+enum OtpPurpose {
+  verify_email
+  reset_password
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String        @map("password_hash")
+  name         String
+  role         Role          @default(passenger)
+  status       AccountStatus @default(Pending)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  refreshTokens   RefreshToken[]
+  passengerProfile PassengerProfile?
+  driverProfile   DriverProfile?
+
+  @@map("users")
+}
+
+model PassengerProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  phone     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("passenger_profiles")
+}
+
+model DriverProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  phone     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("driver_profiles")
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  tokenHash String    @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model OtpCode {
+  id        String     @id @default(cuid())
+  email     String
+  purpose   OtpPurpose
+  codeHash  String     @map("code_hash")
+  expiresAt DateTime   @map("expires_at")
+  usedAt    DateTime?  @map("used_at")
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  @@index([email, purpose])
+  @@map("otp_codes")
+}

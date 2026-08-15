@@ -21,7 +21,7 @@ export default function Logo({ size = 'md', className }: LogoProps) {
       )}
       aria-hidden
     >
-      P
+      H
     </span>
   );
 }

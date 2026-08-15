@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: hatodgo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hatodgo
+      POSTGRES_PASSWORD: hatodgo
+      POSTGRES_DB: hatodgo
+    ports:
+      - "5433:5432"
+    volumes:
+      - hatodgo_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hatodgo -d hatodgo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  hatodgo_pgdata:
