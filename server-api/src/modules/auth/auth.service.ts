@@ -17,6 +17,7 @@ import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ResendOtpDto } from './dto/resend-otp.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { UserRole } from './enums/user-role.enum';
 import { AuthUser } from './types/auth-user.type';
@@ -88,7 +89,7 @@ export class AuthService {
     return this.issueTokens(activated);
   }
 
-  async resendOtp(dto: { email: string }) {
+  async resendOtp(dto: ResendOtpDto) {
     const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
 
     if (!user) {
