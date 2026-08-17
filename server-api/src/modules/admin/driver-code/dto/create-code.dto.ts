@@ -1,14 +1,15 @@
-import { IsString, IsOptional, IsDateString, IsBooleanString } from 'class-validator';
+import {
+  IsOptional,
+  IsDateString,
+  IsBoolean,
+} from 'class-validator';
 
 export class CreateCodeDto {
-  @IsString()
-  code!: string;
-
   @IsDateString()
   @IsOptional()
   expiresAt?: string;
 
-  @IsBooleanString()
+  @IsBoolean()
   @IsOptional()
   isUsed?: boolean;
 }
