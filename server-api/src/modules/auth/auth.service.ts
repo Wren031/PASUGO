@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { AccountStatus, OtpPurpose, Prisma, User } from '@prisma/client';
+import { AccountStatus, OtpPurpose, Prisma, Role, User, PassengerProfile } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { createHash, randomBytes, randomInt } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -18,10 +18,11 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ResendOtpDto } from './dto/resend-otp.dto';
-import { VerifyOtpDto } from './dto/verify-otp.dto';
+
 import { UserRole } from './enums/user-role.enum';
 import { AuthUser } from './types/auth-user.type';
 import { JwtPayload } from './types/jwt-payload.type';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 const BCRYPT_ROUNDS = 12;
 const OTP_TTL_MINUTES = 10;
@@ -29,7 +30,6 @@ const OTP_TTL_MINUTES = 10;
 const USER_SELECT = {
   id: true,
   email: true,
-  name: true,
   role: true,
   status: true,
   createdAt: true,
@@ -61,7 +61,6 @@ export class AuthService {
       data: {
         email: dto.email,
         passwordHash,
-        name: dto.name,
         role: dto.role,
         status: AccountStatus.Pending,
       },
@@ -85,6 +84,23 @@ export class AuthService {
       data: { status: AccountStatus.Active },
       select: USER_SELECT,
     });
+
+    if (activated.role === Role.passenger) {
+      await this.prisma.passengerProfile.upsert({
+        where: { userId: activated.id },
+        create: {
+          userId: activated.id,
+          totalRides: 0,
+          cancelledRides: 0,
+          averageRating: null,
+        },
+        update: {
+          totalRides: 0,
+          cancelledRides: 0,
+          averageRating: null,
+        },
+      });
+    }
 
     return this.issueTokens(activated);
   }
@@ -351,7 +367,6 @@ async logout(dto: RefreshTokenDto): Promise<{ message: string }> {
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
       role: user.role,
       status: user.status,
       createdAt: user.createdAt,
@@ -362,7 +377,6 @@ async logout(dto: RefreshTokenDto): Promise<{ message: string }> {
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
       role: user.role,
       status: user.status,
       createdAt: user.createdAt,

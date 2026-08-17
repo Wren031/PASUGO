@@ -13,13 +13,20 @@ enum Role {
   driver
 }
 
+enum Gender {
+  Male
+  Female
+  Other
+  PreferNotToSay
+}
+
 enum AccountStatus {
   Active
   Suspended
   Pending
   Inactive
-}
 
+}
 enum OtpPurpose {
   verify_email
   reset_password
@@ -29,25 +36,52 @@ model User {
   id           String        @id @default(cuid())
   email        String        @unique
   passwordHash String        @map("password_hash")
-  name         String
   role         Role          @default(passenger)
   status       AccountStatus @default(Pending)
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
 
-  refreshTokens   RefreshToken[]
+  refreshTokens    RefreshToken[]
   passengerProfile PassengerProfile?
-  driverProfile   DriverProfile?
+  driverProfile    DriverProfile?
 
   @@map("users")
 }
 
 model PassengerProfile {
-  id        String   @id @default(cuid())
-  userId    String   @unique @map("user_id")
-  phone     String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                String    @id @default(cuid())
+  userId            String    @unique @map("user_id")
+
+  // Personal Information
+  firstName         String?   @map("first_name")
+  middleName        String?   @map("middle_name")
+  lastName          String?   @map("last_name")
+  profilePhoto      String?   @map("profile_photo")
+  dateOfBirth       DateTime? @map("date_of_birth")
+  gender            Gender?
+
+  // Contact Information
+  phone             String?   @unique
+  phoneVerified     Boolean   @default(false) @map("phone_verified")
+
+  // Address
+  address           String?
+  city              String?
+  province          String?
+
+  // Emergency Contact
+  emergencyName     String?   @map("emergency_name")
+  emergencyPhone    String?   @map("emergency_phone")
+  emergencyRelation String?   @map("emergency_relation")
+
+  // Passenger Statistics
+  totalRides        Int       @default(0) @map("total_rides")
+  cancelledRides    Int       @default(0) @map("cancelled_rides")
+  averageRating     Decimal?  @db.Decimal(3, 2) @map("average_rating")
+
+  // Timestamps
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -55,9 +89,45 @@ model PassengerProfile {
 }
 
 model DriverProfile {
-  id        String   @id @default(cuid())
-  userId    String   @unique @map("user_id")
-  phone     String?
+  id            String       @id @default(cuid())
+  userId        String       @unique @map("user_id")
+
+  // Personal Information
+  firstName     String?      @map("first_name")
+  middleName    String?      @map("middle_name")
+  lastName      String?      @map("last_name")
+  profilePhoto  String?      @map("profile_photo")
+  dateOfBirth   DateTime?    @map("date_of_birth")
+  gender        Gender?
+
+  // Contact Information
+  phone         String?      @unique
+  phoneVerified Boolean      @default(false) @map("phone_verified")
+
+  // Address
+  address       String?
+  city          String?
+  province      String?
+
+  // Driver Information
+  licenseNumber String?      @unique @map("license_number")
+  licenseExpiry DateTime?    @map("license_expiry")
+
+  emergencyName     String?   @map("emergency_name")
+    emergencyPhone    String?   @map("emergency_phone")
+  emergencyRelation String?   @map("emergency_relation")
+
+  // Availability
+  isOnline      Boolean      @default(false) @map("is_online")
+  isAvailable   Boolean      @default(false) @map("is_available")
+
+  // Statistics
+  totalRides     Int         @default(0) @map("total_rides")
+  cancelledRides Int         @default(0) @map("cancelled_rides")
+  completedRides Int         @default(0) @map("completed_rides")
+  averageRating  Decimal?    @db.Decimal(3, 2) @map("average_rating")
+
+  // Timestamps
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -91,4 +161,17 @@ model OtpCode {
 
   @@index([email, purpose])
   @@map("otp_codes")
+}
+
+model DriverRegistrationCode {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  isUsed      Boolean   @default(false) @map("is_used")
+  expiresAt   DateTime? @map("expires_at")
+  usedAt      DateTime? @map("used_at")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("driver_registration_codes")
 }

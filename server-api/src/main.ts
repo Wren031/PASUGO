@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
 
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api');
   app.use(helmet());
 
   app.enableCors({
@@ -35,7 +35,7 @@ async function bootstrap() {
   const port = Number(config.get<string>('PORT', '3000'));
 
   await app.listen(port);
-  console.log(`HatodGo API listening on http://localhost:${port}/api/v1`);
+  console.log(`HatodGo API listening on http://localhost:${port}/api`);
 }
 
 bootstrap();

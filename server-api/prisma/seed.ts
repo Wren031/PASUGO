@@ -7,21 +7,18 @@ const users = [
   {
     email: 'admin@hatodgo.ph',
     password: 'admin123',
-    name: 'HatodGo Admin',
     role: Role.admin,
     status: AccountStatus.Active,
   },
   {
     email: 'passenger@hatodgo.ph',
     password: 'hatodgo123',
-    name: 'Demo Passenger',
     role: Role.passenger,
     status: AccountStatus.Active,
   },
   {
     email: 'driver@hatodgo.ph',
     password: 'hatodgo123',
-    name: 'Demo Driver',
     role: Role.driver,
     status: AccountStatus.Active,
   },
@@ -44,7 +41,6 @@ async function main() {
       data: {
         email: user.email,
         passwordHash: await bcrypt.hash(user.password, saltRounds),
-        name: user.name,
         role: user.role,
         status: user.status,
       },
