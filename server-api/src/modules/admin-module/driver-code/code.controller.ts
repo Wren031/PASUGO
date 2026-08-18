@@ -7,7 +7,6 @@ import { UseRegistrationCodeDto } from "./dto/use-registration-code.dto";
 export class codeController {
     constructor(private prisma: RegistrationCodeService) {}
 
-
     @Post('generate')
     async createController(@Body() dto: CreateCodeDto){
         return this.prisma.createRegistrationCode(dto);

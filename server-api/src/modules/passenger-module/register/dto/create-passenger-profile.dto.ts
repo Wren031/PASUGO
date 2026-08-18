@@ -1,22 +1,34 @@
-import { IsString, IsOptional, IsEnum } from 'class-validator';
-import { Gender } from '../enums/gender.enum';
+import {
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-export class UpdatePassengerProfileDto {
+import { Gender } from '@prisma/client';
+
+export class CreatePassengerProfileDto {
   @IsString()
-  @IsOptional()
-  firstName?: string;
+  firstName!: string;
 
   @IsString()
   @IsOptional()
   middleName?: string;
 
   @IsString()
-  @IsOptional()
-  lastName?: string;
+  lastName!: string;
 
   @IsString()
   @IsOptional()
   profilePhoto?: string;
+
+  @IsDateString()
+  @IsOptional()
+  dateOfBirth?: string;
+
+  @IsEnum(Gender)
+  @IsOptional()
+  gender?: Gender;
 
   @IsString()
   @IsOptional()
@@ -45,12 +57,4 @@ export class UpdatePassengerProfileDto {
   @IsString()
   @IsOptional()
   emergencyRelation?: string;
-
-  @IsEnum(Gender)
-  @IsOptional()
-  gender?: Gender;
-
-  @IsString()
-  @IsOptional()
-  dateOfBirth?: string;
 }

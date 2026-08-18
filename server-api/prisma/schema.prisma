@@ -25,11 +25,26 @@ enum AccountStatus {
   Suspended
   Pending
   Inactive
-
 }
+
 enum OtpPurpose {
   verify_email
   reset_password
+}
+
+enum DriverVerificationDocumentType {
+  DRIVER_LICENSE_FRONT
+  DRIVER_LICENSE_BACK
+  OR
+  CR
+  NBI_CLEARANCE
+  POLICE_CLEARANCE
+}
+
+enum DriverVerificationStatus {
+  Pending
+  Approved
+  Rejected
 }
 
 model User {
@@ -49,83 +64,35 @@ model User {
 }
 
 model PassengerProfile {
-  id                String    @id @default(cuid())
-  userId            String    @unique @map("user_id")
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
 
   // Personal Information
-  firstName         String?   @map("first_name")
-  middleName        String?   @map("middle_name")
-  lastName          String?   @map("last_name")
-  profilePhoto      String?   @map("profile_photo")
-  dateOfBirth       DateTime? @map("date_of_birth")
-  gender            Gender?
+  firstName    String?   @map("first_name")
+  middleName   String?   @map("middle_name")
+  lastName     String?   @map("last_name")
+  profilePhoto String?   @map("profile_photo")
+  dateOfBirth  DateTime? @map("date_of_birth")
+  gender       Gender?
 
   // Contact Information
-  phone             String?   @unique
-  phoneVerified     Boolean   @default(false) @map("phone_verified")
+  phone         String? @unique
+  phoneVerified Boolean @default(false) @map("phone_verified")
 
   // Address
-  address           String?
-  city              String?
-  province          String?
+  address  String?
+  city     String?
+  province String?
 
   // Emergency Contact
-  emergencyName     String?   @map("emergency_name")
-  emergencyPhone    String?   @map("emergency_phone")
-  emergencyRelation String?   @map("emergency_relation")
+  emergencyName     String? @map("emergency_name")
+  emergencyPhone    String? @map("emergency_phone")
+  emergencyRelation String? @map("emergency_relation")
 
   // Passenger Statistics
-  totalRides        Int       @default(0) @map("total_rides")
-  cancelledRides    Int       @default(0) @map("cancelled_rides")
-  averageRating     Decimal?  @db.Decimal(3, 2) @map("average_rating")
-
-  // Timestamps
-  createdAt         DateTime  @default(now()) @map("created_at")
-  updatedAt         DateTime  @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("passenger_profiles")
-}
-
-model DriverProfile {
-  id            String       @id @default(cuid())
-  userId        String       @unique @map("user_id")
-
-  // Personal Information
-  firstName     String?      @map("first_name")
-  middleName    String?      @map("middle_name")
-  lastName      String?      @map("last_name")
-  profilePhoto  String?      @map("profile_photo")
-  dateOfBirth   DateTime?    @map("date_of_birth")
-  gender        Gender?
-
-  // Contact Information
-  phone         String?      @unique
-  phoneVerified Boolean      @default(false) @map("phone_verified")
-
-  // Address
-  address       String?
-  city          String?
-  province      String?
-
-  // Driver Information
-  licenseNumber String?      @unique @map("license_number")
-  licenseExpiry DateTime?    @map("license_expiry")
-
-  emergencyName     String?   @map("emergency_name")
-    emergencyPhone    String?   @map("emergency_phone")
-  emergencyRelation String?   @map("emergency_relation")
-
-  // Availability
-  isOnline      Boolean      @default(false) @map("is_online")
-  isAvailable   Boolean      @default(false) @map("is_available")
-
-  // Statistics
-  totalRides     Int         @default(0) @map("total_rides")
-  cancelledRides Int         @default(0) @map("cancelled_rides")
-  completedRides Int         @default(0) @map("completed_rides")
-  averageRating  Decimal?    @db.Decimal(3, 2) @map("average_rating")
+  totalRides     Int      @default(0) @map("total_rides")
+  cancelledRides Int      @default(0) @map("cancelled_rides")
+  averageRating  Decimal? @map("average_rating") @db.Decimal(3, 2)
 
   // Timestamps
   createdAt DateTime @default(now()) @map("created_at")
@@ -133,7 +100,73 @@ model DriverProfile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@map("passenger_profiles")
+}
+
+model DriverProfile {
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
+
+  // Personal Information
+  firstName    String?   @map("first_name")
+  middleName   String?   @map("middle_name")
+  lastName     String?   @map("last_name")
+  profilePhoto String?   @map("profile_photo")
+  dateOfBirth  DateTime? @map("date_of_birth")
+  gender       Gender?
+
+  // Contact Information
+  phone         String? @unique
+  phoneVerified Boolean @default(false) @map("phone_verified")
+
+  // Address
+  address  String?
+  city     String?
+  province String?
+
+  // Driver Information
+  licenseNumber String?   @unique @map("license_number")
+  licenseExpiry DateTime? @map("license_expiry")
+
+  emergencyName     String? @map("emergency_name")
+  emergencyPhone    String? @map("emergency_phone")
+  emergencyRelation String? @map("emergency_relation")
+
+  // Availability
+  isOnline    Boolean @default(false) @map("is_online")
+  isAvailable Boolean @default(false) @map("is_available")
+
+  // Statistics
+  totalRides     Int      @default(0) @map("total_rides")
+  cancelledRides Int      @default(0) @map("cancelled_rides")
+  completedRides Int      @default(0) @map("completed_rides")
+  averageRating  Decimal? @map("average_rating") @db.Decimal(3, 2)
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user          User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verifications DriverVerification[]
+
   @@map("driver_profiles")
+}
+
+model DriverVerification {
+  id              String                         @id @default(cuid())
+  driverProfileId String                         @map("driver_profile_id")
+  documentType    DriverVerificationDocumentType @map("document_type")
+  filePath        String                         @map("file_path")
+  status          DriverVerificationStatus       @default(Pending)
+  rejectionReason String?                        @map("rejection_reason")
+  createdAt       DateTime                       @default(now()) @map("created_at")
+  updatedAt       DateTime                       @updatedAt @map("updated_at")
+
+  driverProfile DriverProfile @relation(fields: [driverProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([driverProfileId, documentType])
+  @@index([driverProfileId])
+  @@map("driver_verifications")
 }
 
 model RefreshToken {
@@ -164,14 +197,14 @@ model OtpCode {
 }
 
 model DriverRegistrationCode {
-  id          String    @id @default(cuid())
-  code        String    @unique
-  isUsed      Boolean   @default(false) @map("is_used")
-  expiresAt   DateTime? @map("expires_at")
-  usedAt      DateTime? @map("used_at")
+  id        String    @id @default(cuid())
+  code      String    @unique
+  isUsed    Boolean   @default(false) @map("is_used")
+  expiresAt DateTime? @map("expires_at")
+  usedAt    DateTime? @map("used_at")
 
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("driver_registration_codes")
 }

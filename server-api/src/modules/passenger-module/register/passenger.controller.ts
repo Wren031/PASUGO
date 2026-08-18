@@ -17,7 +17,7 @@ export class PassengerController {
     getOneController(@Param('userId') userId: string) {
         return this.passengerService.getOne(userId);
     }
-    
+     
     @Get('getAll')
     getAllController() {
         return this.passengerService.getAll();

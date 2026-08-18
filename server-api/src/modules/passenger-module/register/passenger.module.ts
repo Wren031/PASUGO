@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PassengerService } from './passenger.service';
 
-import { PrismaService } from '../prisma/prisma.service';
+
 import { PassengerController } from './passenger.controller';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 
 @Module({
   controllers: [PassengerController, PassengerController],
