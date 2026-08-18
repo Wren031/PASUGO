@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseEnumPipe, Patch, Post, Res, StreamableFile } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseEnumPipe, Patch, Post, Res, StreamableFile } from "@nestjs/common";
 import { DriverVerificationDocumentType } from "@prisma/client";
 import { Response } from "express";
 import { createReadStream } from "fs";
@@ -13,7 +13,7 @@ import { UpdateVerificationStatusDto } from "src/modules/driver-module/verificat
 export class AdminDriverController {
     constructor(private readonly driverService: AdminDriverService) {}
 
-    @Post('admin-delete-driver/:userId')
+    @Delete('admin-delete-driver/:userId')
     async deleteDriverController(userId: string, @Body() dto: AdminDeleteDriverDto) {
         return this.driverService.deleteDriver(userId, dto);
     }

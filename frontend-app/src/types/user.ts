@@ -19,11 +19,3 @@ export interface LoginPayload {
   phone: string;
   password: string;
 }
-
-export interface RegisterPayload {
-  name: string;
-  phone: string;
-  email: string;
-  password: string;
-  role: Role;
-}

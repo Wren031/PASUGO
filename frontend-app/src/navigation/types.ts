@@ -5,8 +5,16 @@ import type { SavedPlace } from '@/types/passenger';
 import type { PickedLocation } from '@/components/inputs/LocationInput';
 
 export type AuthStackParamList = {
+  Welcome: undefined;
   Login: undefined;
   Register: undefined;
+  InvitationCode: undefined;
+  RegisterAccount: { role: 'passenger' | 'driver' };
+  OtpVerification: { debugOtp?: string };
+  PassengerProfile: undefined;
+  DriverInformation: undefined;
+  DriverDocuments: undefined;
+  DriverReview: undefined;
   ForgotPassword: undefined;
 };
 

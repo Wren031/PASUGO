@@ -1,13 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { authService } from '../services/auth-service';
 import { useAuthStore } from '@/store/auth-store';
-import type { RegisterPayload } from '@/types/user';
 
-export function useRegister() {
+export function useGoogleSignIn() {
   const login = useAuthStore((state) => state.login);
 
   return useMutation({
-    mutationFn: (payload: RegisterPayload) => authService.register(payload),
+    mutationFn: () => authService.googleSignIn(),
     onSuccess: (session) => {
       login(session);
     },

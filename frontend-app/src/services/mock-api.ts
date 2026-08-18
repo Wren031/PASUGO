@@ -8,13 +8,25 @@ import type { ChartPoint, Driver, DriverEarningBreakdown, DriverTripEarning, Ear
 import type { AppNotification } from '@/types/notification';
 import type { PaymentMethodInfo, PaymentTransaction, TopUpOption, WalletAccount } from '@/types/payment';
 import type { Review, ReviewSubmission } from '@/types/review';
-import type { AuthSession, LoginPayload, RegisterPayload, User } from '@/types/user';
+import type { RegistrationDraft, RegistrationRole } from '@/features/auth/types';
+import type { AuthSession, LoginPayload, User } from '@/types/user';
 import type { Vehicle } from '@/types/vehicle';
 import type { SavedPlace } from '@/types/passenger';
 import type { LatLng } from '@/types/map';
 import type { DocumentInfo } from '@/types/common';
 
 const DRIVER_SHARE = 0.8;
+
+const INVITATION_CODES = [
+  { code: 'HGO-DRV-2026-001', status: 'ACTIVE', expiresAt: '2026-12-31T23:59:59Z' },
+  { code: 'HGO-DRV-2026-002', status: 'ACTIVE', expiresAt: '2026-12-31T23:59:59Z' },
+  { code: 'HGO-DRV-2025-001', status: 'EXPIRED', expiresAt: '2025-12-31T23:59:59Z' },
+] as const;
+
+const MOCK_OTP_BY_ROLE: Record<RegistrationRole, string> = {
+  passenger: '123456',
+  driver: '654321',
+};
 
 function asUser(record: { id: string; role: 'passenger' | 'driver'; name: string; email: string; phone: string; createdAt: string }): User {
   return {
@@ -86,23 +98,72 @@ export const mockApi = {
     return { token: generateId('tok'), user: asUser(user) };
   },
 
-  async register(payload: RegisterPayload): Promise<AuthSession> {
+  async validateInvitationCode(code: string): Promise<{ code: string; status: string; expiresAt: string }> {
+    await mockDelay(600);
+    const normalized = code.trim().toUpperCase();
+    const match = INVITATION_CODES.find((entry) => entry.code === normalized);
+    const valid =
+      match &&
+      match.status === 'ACTIVE' &&
+      new Date(match.expiresAt).getTime() >= Date.now();
+    if (!match || !valid) {
+      throw new ApiError('This invitation code is invalid or has expired.', 400);
+    }
+    return cloneDeep(match);
+  },
+
+  async checkEmailAvailable(email: string): Promise<void> {
+    await mockDelay(350);
+    const normalized = email.trim().toLowerCase();
+    if (mockData.users.some((u) => u.email.toLowerCase() === normalized)) {
+      throw new ApiError('An account with this email already exists.', 409);
+    }
+  },
+
+  async requestOtp(role: RegistrationRole, email: string): Promise<{ otp: string }> {
+    await mockDelay(500);
+    return { otp: MOCK_OTP_BY_ROLE[role] };
+  },
+
+  async verifyOtp(role: RegistrationRole, email: string, otp: string): Promise<void> {
+    await mockDelay(600);
+    if (otp.trim() !== MOCK_OTP_BY_ROLE[role]) {
+      throw new ApiError('The code you entered is incorrect. Please try again.', 400);
+    }
+  },
+
+  async completeRegistration(draft: RegistrationDraft): Promise<AuthSession> {
     await mockDelay(900);
-    const normalized = payload.phone.replace(/[\s-]/g, '');
-    if (mockData.users.some((u) => u.phone.replace(/[\s-]/g, '') === normalized)) {
-      throw new ApiError('An account with this phone number already exists.', 409);
+    const profile = draft.profile;
+    if (!profile) {
+      throw new ApiError('Profile information is required.', 400);
     }
     const record = {
-      id: generateId(payload.role === 'driver' ? 'd' : 'p'),
-      role: payload.role,
-      name: payload.name,
-      email: payload.email,
-      phone: payload.phone,
-      password: payload.password,
+      id: generateId(draft.role === 'driver' ? 'd' : 'p'),
+      role: draft.role,
+      name: profile.name,
+      email: draft.email,
+      phone: profile.phone,
+      password: draft.password,
       createdAt: new Date().toISOString(),
     };
     mockData.users.push(record);
     return { token: generateId('tok'), user: asUser(record) };
+  },
+
+  async googleSignIn(): Promise<AuthSession> {
+    await mockDelay(700);
+    return {
+      token: generateId('tok'),
+      user: {
+        id: generateId('p'),
+        role: 'passenger',
+        name: 'Aiden Reyes',
+        email: 'aiden.reyes@gmail.com',
+        phone: '0918 000 1122',
+        createdAt: new Date().toISOString(),
+      },
+    };
   },
 
   async forgotPassword(phone: string): Promise<void> {

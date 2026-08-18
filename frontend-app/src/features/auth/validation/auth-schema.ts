@@ -1,37 +1,69 @@
 import { z } from 'zod';
 import { REGEX } from '@/constants/mock';
-import type { ForgotPasswordFormValues, LoginFormValues, RegisterFormValues } from '../types';
+import type {
+  AccountFormValues,
+  ForgotPasswordFormValues,
+  InvitationCodeFormValues,
+  LoginFormValues,
+  OtpFormValues,
+  ProfileFormValues,
+} from '../types';
 
 const phoneSchema = z
   .string()
   .min(1, 'Phone number is required')
   .regex(/^09\d{9}$/, 'Enter a valid 11-digit mobile number starting with 09');
 
+const passwordSchema = z
+  .string()
+  .min(8, 'Password must be at least 8 characters')
+  .regex(/[A-Z]/, 'Include at least one uppercase letter')
+  .regex(/[a-z]/, 'Include at least one lowercase letter')
+  .regex(/\d/, 'Include at least one number');
+
+const emailSchema = z
+  .string()
+  .min(1, 'Email is required')
+  .regex(REGEX.email, 'Enter a valid email address');
+
 export const loginSchema = z.object({
   phone: phoneSchema,
   password: z.string().min(1, 'Password is required'),
 }) satisfies z.ZodType<LoginFormValues>;
 
-export const registerSchema = z
+export const invitationCodeSchema = z.object({
+  invitationCode: z.string().min(1, 'Invitation code is required'),
+}) satisfies z.ZodType<InvitationCodeFormValues>;
+
+export const accountSchema = z
   .object({
-    name: z.string().min(2, 'Please enter your full name'),
-    phone: phoneSchema,
-    email: z.string().min(1, 'Email is required').regex(REGEX.email, 'Enter a valid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+    email: emailSchema,
+    password: passwordSchema,
     confirmPassword: z.string().min(1, 'Please confirm your password'),
-    role: z.enum(['passenger', 'driver']),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
-  }) satisfies z.ZodType<RegisterFormValues>;
+  }) satisfies z.ZodType<AccountFormValues>;
+
+export const profileSchema = z.object({
+  name: z.string().min(2, 'Please enter your full name'),
+  phone: phoneSchema,
+}) satisfies z.ZodType<ProfileFormValues>;
+
+export const otpSchema = z.object({
+  otp: z.string().regex(/^\d{6}$/, 'Enter the 6-digit code'),
+}) satisfies z.ZodType<OtpFormValues>;
 
 export const forgotPasswordSchema = z.object({
   phone: phoneSchema,
 }) satisfies z.ZodType<ForgotPasswordFormValues>;
 
 export type LoginSchema = z.infer<typeof loginSchema>;
-export type RegisterSchema = z.infer<typeof registerSchema>;
+export type InvitationCodeSchema = z.infer<typeof invitationCodeSchema>;
+export type AccountSchema = z.infer<typeof accountSchema>;
+export type ProfileSchema = z.infer<typeof profileSchema>;
+export type OtpSchema = z.infer<typeof otpSchema>;
 export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
 
 export function normalizePhone(phone: string): string {

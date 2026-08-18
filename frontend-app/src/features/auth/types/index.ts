@@ -3,13 +3,44 @@ export interface LoginFormValues {
   password: string;
 }
 
-export interface RegisterFormValues {
-  name: string;
-  phone: string;
+export type RegistrationRole = 'passenger' | 'driver';
+
+export interface AccountFormValues {
   email: string;
   password: string;
   confirmPassword: string;
-  role: 'passenger' | 'driver';
+}
+
+export interface ProfileFormValues {
+  name: string;
+  phone: string;
+}
+
+export interface InvitationCodeFormValues {
+  invitationCode: string;
+}
+
+export interface OtpFormValues {
+  otp: string;
+}
+
+export interface DocumentUpload {
+  key: string;
+  label: string;
+  description: string;
+  fileName: string;
+  status: 'idle' | 'uploading' | 'uploaded';
+}
+
+export interface RegistrationDraft {
+  role: RegistrationRole;
+  provider: 'email' | 'google';
+  invitationCode: string;
+  email: string;
+  password: string;
+  otpVerified: boolean;
+  profile: ProfileFormValues | null;
+  documents: DocumentUpload[];
 }
 
 export interface ForgotPasswordFormValues {
