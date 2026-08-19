@@ -237,6 +237,18 @@ model GroceryBranch {
   @@map("grocery_branches")
 }
 
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  inventory BranchInventory[]
+
+  @@map("products")
+}
+
 model BranchInventory {
   id                String   @id @default(uuid())
 
@@ -260,7 +272,9 @@ model BranchInventory {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  branch            GroceryBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  branch  GroceryBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([branchId, productId])
   @@index([branchId])
@@ -268,17 +282,3 @@ model BranchInventory {
 
   @@map("branch_inventory")
 }
-
-model Product {
-  id        String   @id @default(uuid())
-  name      String
-  category  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  inventory BranchInventory[]
-
-  @@map("products")
-}
-
-

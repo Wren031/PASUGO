@@ -1,4 +1,5 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { CreateBranchInventoryDto } from "./create-branch-inventory.dto";
+import { BranchInventoryController } from "../branch-inventory.controller";
 
-export class UpdateBranchInventory extends PartialType(CreateBranchInventoryDto) {}
+
+export class UpdateBranchInventory extends PartialType(BranchInventoryController) {}
