@@ -9,6 +9,7 @@ import { DriverModule } from './modules/driver-module/register/driver.module';
 import { RegistrationCodeModule } from './modules/admin-module/driver-code/code.module';
 import { AdminDriverModule } from './modules/admin-module/drivers/driver.module';
 import { UserModule } from './modules/admin-module/users/users.module';
+import { BranchModule } from './modules/admin-module/grocery-branch/grocery-branch.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { UserModule } from './modules/admin-module/users/users.module';
     DriverModule,
     RegistrationCodeModule,
     AdminDriverModule,
-    UserModule
+    UserModule,
+    BranchModule
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

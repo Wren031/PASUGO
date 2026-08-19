@@ -24,3 +24,10 @@ export function useCancelBooking() {
       bookingService.cancelBooking(id, reason),
   });
 }
+
+export function useAssignDriver() {
+  return useMutation({
+    mutationFn: ({ bookingId, driverId }: { bookingId: string; driverId: string }) =>
+      bookingService.assignDriverToBooking(bookingId, driverId),
+  });
+}

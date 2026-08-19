@@ -10,6 +10,23 @@ export interface SavedPlace {
   coordinates: LatLng;
 }
 
+export type PassengerGender = 'Male' | 'Female' | 'Other' | 'PreferNotToSay';
+
+export interface PassengerProfilePatch {
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  dateOfBirth?: string;
+  gender?: PassengerGender;
+  phone?: string;
+  address?: string;
+  city?: string;
+  province?: string;
+  emergencyName?: string;
+  emergencyPhone?: string;
+  emergencyRelation?: string;
+}
+
 export interface Passenger {
   id: string;
   name: string;
@@ -25,4 +42,17 @@ export interface Passenger {
   homeLocation: string;
   workLocation: string;
   savedPlaces: SavedPlace[];
+
+  // PassengerProfile fields (mirrors server-api PassengerProfile model)
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  dateOfBirth?: string;
+  gender?: PassengerGender;
+  address?: string;
+  city?: string;
+  province?: string;
+  emergencyName?: string;
+  emergencyPhone?: string;
+  emergencyRelation?: string;
 }

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "m-7eleven",
+    "name": "7-Eleven",
+    "emoji": "🏪",
+    "category": "Convenience Store",
+    "location": "SM City Cebu Branch",
+    "qrPayload": "HATDOPAY:m-7eleven"
+  },
+  {
+    "id": "m-jollibee",
+    "name": "Jollibee",
+    "emoji": "🍗",
+    "category": "Fast Food",
+    "location": "Fuente Osmeña Circle",
+    "qrPayload": "HATDOPAY:m-jollibee"
+  },
+  {
+    "id": "m-puregold",
+    "name": "Puregold",
+    "emoji": "🛒",
+    "category": "Supermarket",
+    "location": "Mabolo Branch",
+    "qrPayload": "HATDOPAY:m-puregold"
+  },
+  {
+    "id": "m-sm",
+    "name": "SM Store",
+    "emoji": "🛍️",
+    "category": "Department Store",
+    "location": "SM Seaside City Cebu",
+    "qrPayload": "HATDOPAY:m-sm"
+  },
+  {
+    "id": "m-mercury",
+    "name": "Mercury Drug",
+    "emoji": "💊",
+    "category": "Pharmacy",
+    "location": "Osmeña Boulevard",
+    "qrPayload": "HATDOPAY:m-mercury"
+  },
+  {
+    "id": "m-shell",
+    "name": "Shell Fuel Station",
+    "emoji": "⛽",
+    "category": "Fuel",
+    "location": "North Reclamation Area",
+    "qrPayload": "HATDOPAY:m-shell"
+  },
+  {
+    "id": "m-miniso",
+    "name": "Miniso",
+    "emoji": "🧸",
+    "category": "Lifestyle Store",
+    "location": "SM City Cebu",
+    "qrPayload": "HATDOPAY:m-miniso"
+  },
+  {
+    "id": "m-mcdonalds",
+    "name": "McDonald's",
+    "emoji": "🍟",
+    "category": "Fast Food",
+    "location": "IT Park Lahug",
+    "qrPayload": "HATDOPAY:m-mcdonalds"
+  }
+]

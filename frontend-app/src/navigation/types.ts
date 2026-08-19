@@ -30,7 +30,11 @@ export type PassengerStackParamList = {
   PassengerTabs: NavigatorScreenParams<PassengerTabParamList> | undefined;
   SelectLocationScreen: SelectLocationScreenParams;
   SearchDriver: { booking: Booking };
+  PickRider: { booking: Booking };
+  RiderProfile: { driverId: string; booking?: Booking; driver?: AvailableDriver };
   DriverFound: { booking: Booking; driver: AvailableDriver };
+  ScanPay: undefined;
+  ScanPayConfirm: { payload: string };
   TripTracking: { booking: Booking; driver: AvailableDriver };
   TripDetails: { booking: Booking };
   ReviewDriver: { booking: Booking };
@@ -44,6 +48,7 @@ export type PassengerStackParamList = {
   GroceryStore: { storeId: string };
   GroceryCheckout: undefined;
   GroceryTracking: { orderId: string; storeId: string };
+  VerifyAccount: { next?: 'RideBooking' | 'GroceryStores' };
 };
 
 export type SelectLocationScreenParams = {
@@ -67,6 +72,7 @@ export type DriverStackParamList = {
   DriverVehicle: undefined;
   DriverReviews: undefined;
   DriverEditProfile: undefined;
+  DriverWallet: undefined;
 };
 
 export type RootStackParamList = {

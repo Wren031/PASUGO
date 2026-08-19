@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Feather } from '@expo/vector-icons';
@@ -79,6 +79,21 @@ export function DriverFoundScreen() {
             />
             <Badge label={driver.plateNumber} tone="primary" />
           </View>
+
+          <Pressable
+            onPress={() =>
+              navigation.navigate('RiderProfile', { driverId: driver.id, booking, driver })
+            }
+            className="mt-4 flex-row items-center justify-between rounded-2xl border border-line bg-white px-4 py-3 active:bg-slate-50"
+          >
+            <View className="flex-row items-center gap-2.5">
+              <View className="h-8 w-8 items-center justify-center rounded-full bg-orange-100">
+                <Feather name="user" size={14} color="#F97316" />
+              </View>
+              <Text className="text-[13px] font-bold text-ink">View rider account</Text>
+            </View>
+            <Feather name="chevron-right" size={16} color="#CBD5E1" />
+          </Pressable>
 
           <View className="mt-4 rounded-2xl bg-surface-muted p-4">
             <View className="flex-row items-center gap-2.5">

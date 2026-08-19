@@ -8,11 +8,13 @@ import { Screen } from '@/components/screen/Screen';
 import { Avatar } from '@/components/ui/Avatar';
 import { RatingStars } from '@/components/ui/RatingStars';
 import { StatCard } from '@/components/cards/StatCard';
+import { WalletCard } from '@/components/cards/WalletCard';
 import { SectionCard } from '@/components/cards/SectionCard';
 import { Toggle } from '@/components/ui/Toggle';
 import { SkeletonList } from '@/components/loaders/Skeleton';
 import { useDriverProfile, useDriverEarnings } from '@/features/driver/profile/hooks/useDriver';
 import { useDriverRideRequests } from '@/features/driver/profile/hooks/useDriver';
+import { useWallet } from '@/features/driver/wallet/hooks/useDriverWallet';
 import { useDriverStore } from '@/store/driver-store';
 import { useAuthStore, selectUser } from '@/store/auth-store';
 import { formatCurrency } from '@/utils/format';
@@ -24,6 +26,14 @@ type Navigation = CompositeNavigationProp<
   NativeStackNavigationProp<DriverStackParamList>
 >;
 
+function todayLabel(): string {
+  return new Date().toLocaleDateString('en-PH', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
 export function DriverDashboardScreen() {
   const navigation = useNavigation<Navigation>();
   const user = useAuthStore(selectUser);
@@ -31,6 +41,7 @@ export function DriverDashboardScreen() {
   const { data: driver, isLoading: profileLoading } = useDriverProfile(driverId);
   const { data: earnings } = useDriverEarnings(driverId);
   const { data: requests } = useDriverRideRequests(driverId);
+  const { data: wallet } = useWallet(driverId);
 
   const online = useDriverStore((state) => state.online);
   const incomingRequest = useDriverStore((state) => state.incomingRequest);
@@ -74,6 +85,19 @@ export function DriverDashboardScreen() {
   return (
     <Screen>
       <ScrollView className="flex-1 px-4 pb-8" showsVerticalScrollIndicator={false}>
+        <View className="mt-4 flex-row items-center justify-between">
+          <View>
+            <Text className="text-[13px] font-medium text-ink-muted">{todayLabel()}</Text>
+            <Text className="mt-0.5 text-[20px] font-extrabold tracking-tight text-ink">Driver dashboard</Text>
+          </View>
+          <Pressable
+            onPress={() => navigation.navigate('Profile')}
+            className="rounded-full border border-line bg-white p-2.5 active:bg-slate-50"
+          >
+            <Feather name="user" size={17} color="#F97316" />
+          </Pressable>
+        </View>
+
         <View className="mt-4 flex-row items-center gap-3 rounded-2xl border border-line bg-white p-4">
           <Avatar name={user?.name ?? 'Driver'} size="lg" showOnlineDot={online} />
           <View className="flex-1">
@@ -97,12 +121,6 @@ export function DriverDashboardScreen() {
               </>
             ) : null}
           </View>
-          <Pressable
-            onPress={() => navigation.navigate('Profile')}
-            className="rounded-full border border-line bg-white p-2.5 active:bg-slate-50"
-          >
-            <Feather name="user" size={17} color="#F97316" />
-          </Pressable>
         </View>
 
         <View className="mt-4 rounded-2xl bg-primary p-5">
@@ -121,6 +139,18 @@ export function DriverDashboardScreen() {
             </View>
             <Toggle value={online} onValueChange={handleToggle} />
           </View>
+        </View>
+
+        <View className="mt-4">
+          <WalletCard
+            balance={wallet?.balance ?? 0}
+            subtitle="Available balance"
+            suffix={`HAT • ${driverId.slice(-4).toUpperCase()}`}
+            actionLabel="Withdraw"
+            actionIcon="arrow-down-left"
+            onPress={() => navigation.navigate('DriverWallet')}
+            onAction={() => navigation.navigate('DriverWallet')}
+          />
         </View>
 
         {activeRequest ? (

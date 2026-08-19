@@ -10,6 +10,7 @@ import { UpdateVerificationStatusDto } from "src/modules/driver-module/verificat
 
 
 @Controller('admin-driver-controller')
+@Roles(UserRole.admin)
 export class AdminDriverController {
     constructor(private readonly driverService: AdminDriverService) {}
 

@@ -30,6 +30,7 @@ export interface PaymentTransaction {
   status: TransactionStatus;
   date: string;
   description: string;
+  merchant?: { id: string; name: string; emoji: string };
 }
 
 export interface TopUpOption {

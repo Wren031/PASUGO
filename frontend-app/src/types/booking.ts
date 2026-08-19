@@ -1,9 +1,11 @@
 import type { BookingStatus, TimelineEvent } from './common';
 import type { LatLng } from './map';
 
-export type PaymentMethod = 'Cash' | 'GCash' | 'Card' | 'Wallet';
+export type PaymentMethod = 'Cash' | 'GCash' | 'Card' | 'Wallet' | 'Bank Transfer';
 
 export type VehicleType = 'motorcycle' | 'car';
+
+export type BookingMethod = 'automatic' | 'manual';
 
 export type TripPhase =
   | 'searching'
@@ -46,6 +48,7 @@ export interface Booking {
   timeline: TimelineEvent[];
   rated: boolean;
   ratingValue?: number;
+  method?: BookingMethod;
 }
 
 export interface BookingDraft {
@@ -61,6 +64,8 @@ export interface BookingDraft {
   vehicleType: VehicleType;
   paymentMethod: PaymentMethod;
   fare: FareBreakdown;
+  method?: BookingMethod;
+  preferredDriverId?: string;
 }
 
 export interface AvailableDriver {

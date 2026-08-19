@@ -7,9 +7,11 @@ import type { ChartPoint, Driver, DriverEarningBreakdown, DriverTripEarning, Ear
 import type { AppNotification } from '@/types/notification';
 import type { GroceryOrder, GroceryOrderDraft, GroceryStore } from '@/types/grocery';
 import type { PaymentMethodInfo, PaymentTransaction, TopUpOption, WalletAccount } from '@/types/payment';
+import type { Merchant } from '@/types/merchant';
+import { QR_PREFIX } from '@/types/merchant';
 import type { Review, ReviewSubmission } from '@/types/review';
 import type { Vehicle } from '@/types/vehicle';
-import type { SavedPlace } from '@/types/passenger';
+import type { SavedPlace, PassengerProfilePatch } from '@/types/passenger';
 import type { LatLng } from '@/types/map';
 import type { DocumentInfo } from '@/types/common';
 
@@ -29,6 +31,38 @@ function toAvailableDriver(driver: Driver, from: LatLng): AvailableDriver {
     vehicleLabel: `${driver.motorcycle.brand} ${driver.motorcycle.model}`,
     plateNumber: driver.motorcycle.plateNumber,
   };
+}
+
+function isDriverBusy(driverId: string): boolean {
+  return mockData.bookings.some(
+    (b) => b.driverId === driverId && !['Completed', 'Cancelled'].includes(b.status),
+  );
+}
+
+function assignDriverToBookingInternal(bookingId: string, driverId: string): Booking {
+  const booking = mockData.bookings.find((b) => b.id === bookingId);
+  if (!booking) throw new ApiError('Booking not found.', 404);
+  const driver = mockData.drivers.find((d) => d.id === driverId);
+  if (!driver) throw new ApiError('Rider not found.', 404);
+  if (driver.availability !== 'Available' || isDriverBusy(driver.id)) {
+    throw new ApiError('This rider is no longer available.', 409);
+  }
+  booking.driverId = driver.id;
+  booking.driverName = driver.name;
+  booking.driverRating = driver.rating;
+  booking.status = 'Accepted';
+  booking.timeline.forEach((event) => {
+    if (event.status === 'current') event.status = 'done';
+  });
+  booking.timeline.push({
+    id: `e${booking.timeline.length + 1}`,
+    label: 'Driver found',
+    description: `${driver.name} accepted your booking`,
+    timestamp: new Date().toISOString(),
+    status: 'current',
+  });
+  driver.availability = 'On Trip';
+  return cloneDeep(booking);
 }
 
 function weekDays(): { start: Date; labels: string[] } {
@@ -70,7 +104,11 @@ export const mockApi = {
     return cloneDeep(passenger);
   },
 
-  async updatePassenger(id: string, patch: Partial<{ name: string; email: string; homeLocation: string; workLocation: string }>) {
+  async updatePassenger(
+    id: string,
+    patch: Partial<{ name: string; email: string; homeLocation: string; workLocation: string }> &
+      PassengerProfilePatch,
+  ) {
     await mockDelay(400);
     const passenger = mockData.passengers.find((p) => p.id === id);
     if (!passenger) throw new ApiError('Passenger not found.', 404);
@@ -91,6 +129,15 @@ export const mockApi = {
     const passenger = mockData.passengers.find((p) => p.id === id);
     if (!passenger) throw new ApiError('Passenger not found.', 404);
     passenger.savedPlaces = passenger.savedPlaces.filter((p) => p.id !== placeId);
+    return cloneDeep(passenger);
+  },
+
+  async verifyAccount(id: string, patch?: PassengerProfilePatch) {
+    await mockDelay(600);
+    const passenger = mockData.passengers.find((p) => p.id === id);
+    if (!passenger) throw new ApiError('Passenger not found.', 404);
+    if (patch) Object.assign(passenger, patch);
+    passenger.identityVerified = true;
     return cloneDeep(passenger);
   },
 
@@ -117,6 +164,7 @@ export const mockApi = {
         (d) =>
           d.availability === 'Available' &&
           d.status === 'Active' &&
+          !isDriverBusy(d.id) &&
           (!vehicleType || d.vehicleType === vehicleType),
       )
       .map((d) => toAvailableDriver(d, from))
@@ -142,7 +190,15 @@ export const mockApi = {
       rated: false,
     };
     mockData.bookings.unshift(booking);
+    if (draft.preferredDriverId) {
+      return assignDriverToBookingInternal(booking.id, draft.preferredDriverId);
+    }
     return cloneDeep(booking);
+  },
+
+  async assignDriverToBooking(bookingId: string, driverId: string): Promise<Booking> {
+    await mockDelay(400);
+    return assignDriverToBookingInternal(bookingId, driverId);
   },
 
   async getBookingsByPassenger(passengerId: string): Promise<Booking[]> {
@@ -164,6 +220,18 @@ export const mockApi = {
     await mockDelay(400);
     const booking = mockData.bookings.find((b) => b.id === id);
     if (!booking) throw new ApiError('Booking not found.', 404);
+    if (booking.driverId) {
+      const driver = mockData.drivers.find((d) => d.id === booking.driverId);
+      const busyElsewhere = mockData.bookings.some(
+        (b) =>
+          b.id !== id &&
+          b.driverId === booking.driverId &&
+          !['Completed', 'Cancelled'].includes(b.status),
+      );
+      if (driver && !busyElsewhere) {
+        driver.availability = 'Available';
+      }
+    }
     booking.status = 'Cancelled';
     booking.timeline.push({
       id: `e${booking.timeline.length + 1}`,
@@ -403,6 +471,95 @@ export const mockApi = {
       { amount: 500, bonus: 50 },
       { amount: 1000, bonus: 120 },
     ];
+  },
+
+  async withdrawWallet(userId: string, amount: number): Promise<WalletAccount> {
+    await mockDelay(500);
+    const existing = mockData.payments.wallets.find((w) => w.userId === userId);
+    let wallet: WalletAccount;
+    if (existing) {
+      wallet = existing;
+    } else {
+      wallet = { userId, balance: 0, currency: 'PHP' };
+      mockData.payments.wallets.push(wallet);
+    }
+    if (wallet.balance < amount) {
+      throw new ApiError('Insufficient wallet balance.', 400);
+    }
+    wallet.balance -= amount;
+    mockData.payments.transactions.unshift({
+      id: generateId('tx'),
+      userId,
+      reference: generateId('HAT'),
+      type: 'payout',
+      method: 'Bank Transfer',
+      amount,
+      status: 'Pending',
+      date: new Date().toISOString(),
+      description: 'Payout to bank',
+    });
+    return cloneDeep(wallet);
+  },
+
+  // ---------------------------------------------------------- QR scan & pay
+  async getMerchants(): Promise<Merchant[]> {
+    await mockDelay(150);
+    return mockData.merchants.map(cloneDeep);
+  },
+
+  async getMerchantByQr(payload: string): Promise<Merchant> {
+    await mockDelay(300);
+    const normalized = payload.trim();
+    if (!normalized.startsWith(QR_PREFIX)) {
+      throw new ApiError('Invalid QR code. Use a HatodGo partner QR.', 400);
+    }
+    const merchantId = normalized.slice(QR_PREFIX.length);
+    const merchant = mockData.merchants.find((m) => m.id === merchantId);
+    if (!merchant) {
+      throw new ApiError('Unrecognized QR code. This merchant is not a HatodGo partner yet.', 404);
+    }
+    return cloneDeep(merchant);
+  },
+
+  async payWithWallet(
+    userId: string,
+    merchantId: string,
+    amount: number,
+  ): Promise<{ wallet: WalletAccount; transaction: PaymentTransaction }> {
+    await mockDelay(600);
+    if (!amount || amount <= 0) {
+      throw new ApiError('Enter an amount to pay.', 400);
+    }
+    const merchant = mockData.merchants.find((m) => m.id === merchantId);
+    if (!merchant) {
+      throw new ApiError('Merchant not found. Please scan the QR again.', 404);
+    }
+    const existing = mockData.payments.wallets.find((w) => w.userId === userId);
+    let wallet: WalletAccount;
+    if (existing) {
+      wallet = existing;
+    } else {
+      wallet = { userId, balance: 0, currency: 'PHP' };
+      mockData.payments.wallets.push(wallet);
+    }
+    if (wallet.balance < amount) {
+      throw new ApiError('Insufficient wallet balance. Top up first.', 400);
+    }
+    wallet.balance -= amount;
+    const transaction: PaymentTransaction = {
+      id: generateId('tx'),
+      userId,
+      reference: generateId('HAT'),
+      type: 'payment',
+      method: 'Wallet',
+      amount,
+      status: 'Success',
+      date: new Date().toISOString(),
+      description: `Payment to ${merchant.name}`,
+      merchant: { id: merchant.id, name: merchant.name, emoji: merchant.emoji },
+    };
+    mockData.payments.transactions.unshift(transaction);
+    return { wallet: cloneDeep(wallet), transaction: cloneDeep(transaction) };
   },
 
   // ---------------------------------------------------------- notifications

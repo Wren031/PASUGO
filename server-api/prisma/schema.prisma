@@ -13,6 +13,12 @@ enum Role {
   driver
 }
 
+enum BranchStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
 enum Gender {
   Male
   Female
@@ -78,6 +84,7 @@ model PassengerProfile {
   // Contact Information
   phone         String? @unique
   phoneVerified Boolean @default(false) @map("phone_verified")
+  isVerified    Boolean @default(false) @map("is_verified")
 
   // Address
   address  String?
@@ -208,3 +215,70 @@ model DriverRegistrationCode {
 
   @@map("driver_registration_codes")
 }
+
+model GroceryBranch {
+  id        String       @id @default(uuid())
+  name      String
+  address   String
+
+  latitude  Decimal      @db.Decimal(10, 7)
+  longitude Decimal      @db.Decimal(10, 7)
+
+  phone     String?
+
+  isOpen    Boolean      @default(false)
+  status    BranchStatus @default(ACTIVE)
+
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  inventory BranchInventory[]
+
+  @@map("grocery_branches")
+}
+
+model BranchInventory {
+  id                String   @id @default(uuid())
+
+  branchId          String
+  productId         String
+
+  sku               String?
+  barcode           String?
+
+  price             Decimal  @db.Decimal(10, 2)
+  costPrice         Decimal? @db.Decimal(10, 2)
+
+  stockQuantity     Decimal  @default(0) @db.Decimal(10, 2)
+  reservedQuantity  Decimal  @default(0) @db.Decimal(10, 2)
+
+  lowStockThreshold Decimal? @default(5) @db.Decimal(10, 2)
+
+  isAvailable       Boolean  @default(true)
+  isFeatured        Boolean  @default(false)
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  branch            GroceryBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([branchId, productId])
+  @@index([branchId])
+  @@index([productId])
+
+  @@map("branch_inventory")
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  inventory BranchInventory[]
+
+  @@map("products")
+}
+
+

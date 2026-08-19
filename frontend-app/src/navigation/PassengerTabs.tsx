@@ -24,7 +24,16 @@ export function PassengerTabs() {
         tabBarHideOnKeyboard: true,
       }}
       tabBar={(props) => (
-        <TabBar {...props} icons={icons} labels={{ Notifications: 'Alerts' }} />
+        <TabBar
+          {...props}
+          icons={icons}
+          labels={{ Notifications: 'Alerts' }}
+          centerAction={{
+            icon: 'maximize',
+            label: 'Scan to pay',
+            onPress: () => props.navigation.getParent()?.navigate('ScanPay'),
+          }}
+        />
       )}
     >
       <Tab.Screen name="Home" component={DashboardScreen} />

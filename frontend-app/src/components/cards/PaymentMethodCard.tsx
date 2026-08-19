@@ -10,6 +10,7 @@ const methodIcon: Record<PaymentMethod, { icon: keyof typeof MaterialCommunityIc
   GCash: { icon: 'cellphone', color: '#3B82F6' },
   Card: { icon: 'credit-card-outline', color: '#8B5CF6' },
   Wallet: { icon: 'wallet-outline', color: '#F97316' },
+  'Bank Transfer': { icon: 'bank-transfer', color: '#0EA5E9' },
 };
 
 interface PaymentMethodCardProps {

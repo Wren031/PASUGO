@@ -16,6 +16,22 @@ export interface ProfileFormValues {
   phone: string;
 }
 
+export type PassengerProfileFormValues = {
+  name?: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  dateOfBirth: string;
+  gender: string;
+  phone: string;
+  address?: string;
+  city?: string;
+  province?: string;
+  emergencyName?: string;
+  emergencyPhone?: string;
+  emergencyRelation?: string;
+};
+
 export interface InvitationCodeFormValues {
   invitationCode: string;
 }
@@ -39,7 +55,7 @@ export interface RegistrationDraft {
   email: string;
   password: string;
   otpVerified: boolean;
-  profile: ProfileFormValues | null;
+  profile: ProfileFormValues | PassengerProfileFormValues | null;
   documents: DocumentUpload[];
 }
 

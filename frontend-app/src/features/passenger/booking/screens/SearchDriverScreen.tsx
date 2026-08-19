@@ -10,7 +10,7 @@ import { NearbyDriversList } from '../components/NearbyDriversList';
 import { SkeletonCard } from '@/components/loaders/Skeleton';
 import { Button } from '@/components/buttons/Button';
 import { Card } from '@/components/cards/Card';
-import { useNearbyDrivers, useCancelBooking } from '../hooks/useBookRide';
+import { useNearbyDrivers, useCancelBooking, useAssignDriver } from '../hooks/useBookRide';
 import { useRideStore } from '@/store/ride-store';
 import { showToast } from '@/store/toast-store';
 import { formatCurrency } from '@/utils/format';
@@ -25,19 +25,31 @@ export function SearchDriverScreen() {
   const navigation = useNavigation<Navigation>();
   const { booking } = route.params;
   const cancelBooking = useCancelBooking();
+  const assignDriver = useAssignDriver();
 
   const { data: nearbyDrivers, isLoading } = useNearbyDrivers(booking.pickupCoordinates, booking.vehicleType);
   const matched = useRef(false);
 
-  const assignDriver = (driver: AvailableDriver) => {
+  const assignDriverFn = (driver: AvailableDriver) => {
     if (matched.current) return;
     matched.current = true;
-    navigation.replace('DriverFound', { booking, driver });
+    assignDriver.mutate(
+      { bookingId: booking.id, driverId: driver.id },
+      {
+        onSuccess: (updatedBooking) => {
+          navigation.replace('DriverFound', { booking: updatedBooking, driver });
+        },
+        onError: (err: Error) => {
+          matched.current = false;
+          showToast('error', 'Rider unavailable', err.message);
+        },
+      },
+    );
   };
 
   useEffect(() => {
     if (!nearbyDrivers || nearbyDrivers.length === 0) return;
-    const timer = setTimeout(() => assignDriver(nearbyDrivers[0]), 3500);
+    const timer = setTimeout(() => assignDriverFn(nearbyDrivers[0]), 3500);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nearbyDrivers]);
@@ -78,7 +90,7 @@ export function SearchDriverScreen() {
         {isLoading ? (
           <SkeletonCard />
         ) : nearbyDrivers && nearbyDrivers.length > 0 ? (
-          <NearbyDriversList drivers={nearbyDrivers} onSelect={assignDriver} />
+          <NearbyDriversList drivers={nearbyDrivers} onSelect={assignDriverFn} />
         ) : (
           <Text className="py-6 text-center text-[13px] text-ink-muted">
             No drivers available nearby. Retrying…

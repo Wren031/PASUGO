@@ -7,12 +7,14 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-
+import { Roles } from 'src/modules/auth-module/decorators/roles.decorator';
+import { UserRole } from 'src/modules/auth-module/enums/user-role.enum';
 
 import { UserStatusDto } from './dto/user-status-dto';
 import { UserService } from './users.service';
 
 @Controller('users')
+@Roles(UserRole.admin)
 export class UserController {
   constructor(
     private readonly userService: UserService,

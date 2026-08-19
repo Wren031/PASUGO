@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { apiClient } from './axios';
 import { mockApi } from './mock-api';
+import { mockData } from './mock-data';
 import { useAuthStore } from '@/store/auth-store';
-import { ApiError } from '@/utils/mock';
+import { ApiError, cloneDeep } from '@/utils/mock';
 import type { RegistrationDraft, RegistrationRole } from '@/features/auth/types';
 import type { AuthSession, LoginPayload, User } from '@/types/user';
+import type { Passenger, PassengerProfilePatch } from '@/types/passenger';
+import type { Driver } from '@/types/driver';
 
 interface ServerUser {
   id: string;
@@ -58,6 +61,75 @@ function toApiError(error: unknown): Error {
 
 let verifiedSession: AuthSession | null = null;
 
+function isNotFound(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 404;
+}
+
+function sessionUser(): User | undefined {
+  return useAuthStore.getState().session?.user;
+}
+
+function emailToName(email: string): string {
+  const prefix = email.split('@')[0] ?? 'Rider';
+  return prefix
+    .split(/[._-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function syntheticPassenger(id: string): Passenger {
+  const user = sessionUser();
+  const name = user?.name?.trim() || (user?.email ? emailToName(user.email) : 'Rider');
+  return {
+    id,
+    name,
+    phone: user?.phone ?? '',
+    email: user?.email ?? '',
+    photoUrl: user?.photoUrl,
+    rating: 0,
+    totalBookings: 0,
+    totalSpent: 0,
+    status: 'Active',
+    identityVerified: false,
+    preferredPayment: 'Cash',
+    homeLocation: '',
+    workLocation: '',
+    savedPlaces: [],
+  };
+}
+
+function syntheticDriver(id: string): Driver {
+  const user = sessionUser();
+  const name = user?.name?.trim() || (user?.email ? emailToName(user.email) : 'Driver');
+  const now = new Date().toISOString();
+  return {
+    id,
+    name,
+    phone: user?.phone ?? '',
+    email: user?.email ?? '',
+    photoUrl: user?.photoUrl,
+    rating: 0,
+    totalTrips: 0,
+    totalEarnings: 0,
+    totalDistanceKm: 0,
+    availability: 'Offline',
+    status: 'Active',
+    identityVerified: false,
+    vehicleType: 'motorcycle',
+    joinedAt: now,
+    yearsExperience: 0,
+    motorcycle: { brand: 'Honda', model: 'TMX 125', plateNumber: 'TBA-0001', color: 'Black', year: new Date().getFullYear() },
+    ratingSummary: { average: 0, total: 0, distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } },
+    documents: {
+      license: { status: 'Pending', note: 'Verification pending' },
+      orcr: { status: 'Pending', note: 'Verification pending' },
+      nbi: { status: 'Pending', note: 'Verification pending' },
+    },
+    currentLocation: { latitude: 14.6042, longitude: 121.0212 },
+  };
+}
+
 /**
  * Real HTTP implementation of the API facade. Auth calls hit the NestJS
  * server; everything else still resolves through the mock so the rest of
@@ -65,6 +137,51 @@ let verifiedSession: AuthSession | null = null;
  */
 export const httpApi = {
   ...mockApi,
+
+  // Mock data keyed by seed ids (p1-p6, d1-d14) does not cover real server
+  // accounts (UUID ids), so lookups fall back to a profile built from the
+  // authenticated session. Registered into mockData so downstream screens
+  // (profile, saved places, checkout, verification badges) keep working.
+  async getPassengerById(id: string): Promise<Passenger> {
+    try {
+      return await mockApi.getPassengerById(id);
+    } catch (error) {
+      if (!isNotFound(error)) throw error;
+      const passenger = syntheticPassenger(id);
+      if (!mockData.passengers.some((p) => p.id === id)) {
+        mockData.passengers.unshift(passenger);
+      }
+      return cloneDeep(passenger);
+    }
+  },
+
+  async verifyAccount(id: string, patch?: PassengerProfilePatch): Promise<Passenger> {
+    try {
+      return await mockApi.verifyAccount(id, patch);
+    } catch (error) {
+      if (!isNotFound(error)) throw error;
+      const passenger = syntheticPassenger(id);
+      if (patch) Object.assign(passenger, patch);
+      passenger.identityVerified = true;
+      if (!mockData.passengers.some((p) => p.id === id)) {
+        mockData.passengers.unshift(passenger);
+      }
+      return cloneDeep(passenger);
+    }
+  },
+
+  async getDriverById(id: string): Promise<Driver> {
+    try {
+      return await mockApi.getDriverById(id);
+    } catch (error) {
+      if (!isNotFound(error)) throw error;
+      const driver = syntheticDriver(id);
+      if (!mockData.drivers.some((d) => d.id === id)) {
+        mockData.drivers.unshift(driver);
+      }
+      return cloneDeep(driver);
+    }
+  },
 
   // ------------------------------------------------------------------ auth
   async login(payload: LoginPayload): Promise<AuthSession> {
@@ -114,6 +231,32 @@ export const httpApi = {
     verifiedSession = null;
     const profile = draft.profile;
     if (!profile) return session;
+
+    if ('firstName' in profile) {
+      const name =
+        profile.name?.trim() ||
+        [profile.firstName, profile.middleName, profile.lastName].filter(Boolean).join(' ');
+      const updated: AuthSession = {
+        ...session,
+        user: { ...session.user, name, phone: profile.phone },
+      };
+      await this.verifyAccount(session.user.id, {
+        firstName: profile.firstName,
+        middleName: profile.middleName,
+        lastName: profile.lastName,
+        dateOfBirth: profile.dateOfBirth,
+        gender: profile.gender as Passenger['gender'],
+        phone: profile.phone,
+        address: profile.address,
+        city: profile.city,
+        province: profile.province,
+        emergencyName: profile.emergencyName,
+        emergencyPhone: profile.emergencyPhone,
+        emergencyRelation: profile.emergencyRelation,
+      });
+      return updated;
+    }
+
     return { ...session, user: { ...session.user, name: profile.name, phone: profile.phone } };
   },
 

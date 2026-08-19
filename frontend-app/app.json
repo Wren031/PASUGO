@@ -30,6 +30,13 @@
     },
     "plugins": [
       [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow HatodGo to use your camera to scan payment QR codes.",
+          "barcodeScannerEnabled": true
+        }
+      ],
+      [
         "expo-location",
         {
           "locationWhenInUsePermission": "Allow HatodGo to use your location to find nearby riders and track trips."

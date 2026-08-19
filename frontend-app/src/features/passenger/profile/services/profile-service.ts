@@ -1,9 +1,13 @@
 import { api } from '@/services';
-import type { Passenger } from '@/types/passenger';
+import type { Passenger, PassengerProfilePatch } from '@/types/passenger';
 
 export const passengerService = {
   async getProfile(userId: string): Promise<Passenger> {
     return api.getPassengerById(userId);
+  },
+
+  async verifyAccount(userId: string, patch: PassengerProfilePatch): Promise<Passenger> {
+    return api.verifyAccount(userId, patch);
   },
 
   async updateProfile(

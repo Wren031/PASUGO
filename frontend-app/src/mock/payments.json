@@ -17,7 +17,11 @@
     { "userId": "p1", "balance": 800, "currency": "PHP" },
     { "userId": "p3", "balance": 450, "currency": "PHP" },
     { "userId": "p4", "balance": 1250, "currency": "PHP" },
-    { "userId": "p5", "balance": 230, "currency": "PHP" }
+    { "userId": "p5", "balance": 230, "currency": "PHP" },
+    { "userId": "d1", "balance": 2450, "currency": "PHP" },
+    { "userId": "d2", "balance": 1890, "currency": "PHP" },
+    { "userId": "d3", "balance": 760, "currency": "PHP" },
+    { "userId": "d4", "balance": 3120, "currency": "PHP" }
   ],
   "transactions": [
     { "id": "tx1", "reference": "HAT-77231", "userId": "p2", "bookingId": "B-20805", "type": "payment", "method": "Cash", "amount": 193, "status": "Success", "date": "2026-08-06T08:30:10", "description": "Ayala Triangle to Ortigas Center" },
@@ -31,6 +35,13 @@
     { "id": "tx9", "reference": "HAT-76877", "userId": "p5", "bookingId": "B-20836", "type": "payment", "method": "Wallet", "amount": 191, "status": "Pending", "date": "2026-08-07T10:33:00", "description": "Ayala Triangle to Ortigas Center" },
     { "id": "tx10", "reference": "HAT-76830", "userId": "p6", "bookingId": "B-20839", "type": "payment", "method": "Card", "amount": 220, "status": "Success", "date": "2026-08-07T11:13:20", "description": "Cubao Farmers Market to Pasig City Hall" },
     { "id": "tx11", "reference": "HAT-76784", "userId": "p1", "bookingId": "B-20841", "type": "payment", "method": "GCash", "amount": 80, "status": "Success", "date": "2026-08-07T11:11:40", "description": "SM North EDSA to Trinoma Mall" },
-    { "id": "tx12", "reference": "HAT-76721", "userId": "p2", "type": "top-up", "method": "Wallet", "amount": 250, "status": "Failed", "date": "2026-07-30T14:20:00", "description": "Wallet top-up failed" }
+    { "id": "tx12", "reference": "HAT-76721", "userId": "p2", "type": "top-up", "method": "Wallet", "amount": 250, "status": "Failed", "date": "2026-07-30T14:20:00", "description": "Wallet top-up failed" },
+    { "id": "tx13", "reference": "HAT-90041", "userId": "d1", "bookingId": "B-20841", "type": "payout", "method": "Wallet", "amount": 64, "status": "Success", "date": "2026-08-07T11:12:00", "description": "Trip payout — B-20841" },
+    { "id": "tx14", "reference": "HAT-90030", "userId": "d1", "bookingId": "B-20805", "type": "payout", "method": "Wallet", "amount": 112, "status": "Success", "date": "2026-08-06T08:40:00", "description": "Trip payout — B-20805" },
+    { "id": "tx15", "reference": "HAT-90022", "userId": "d1", "type": "payout", "method": "Bank Transfer", "amount": 2000, "status": "Pending", "date": "2026-08-05T09:00:00", "description": "Payout to bank" },
+    { "id": "tx16", "reference": "HAT-90112", "userId": "d2", "bookingId": "B-20839", "type": "payout", "method": "Wallet", "amount": 176, "status": "Success", "date": "2026-08-07T11:14:00", "description": "Trip payout — B-20839" },
+    { "id": "tx17", "reference": "HAT-90105", "userId": "d2", "bookingId": "B-20822", "type": "payout", "method": "Wallet", "amount": 98, "status": "Success", "date": "2026-08-06T18:15:00", "description": "Trip payout — B-20822" },
+    { "id": "tx18", "reference": "HAT-90208", "userId": "d4", "bookingId": "B-20840", "type": "payout", "method": "Wallet", "amount": 148, "status": "Success", "date": "2026-08-07T11:16:00", "description": "Trip payout — B-20840" },
+    { "id": "tx19", "reference": "HAT-90201", "userId": "d4", "type": "payout", "method": "Bank Transfer", "amount": 1500, "status": "Success", "date": "2026-08-03T10:30:00", "description": "Payout to bank" }
   ]
 }

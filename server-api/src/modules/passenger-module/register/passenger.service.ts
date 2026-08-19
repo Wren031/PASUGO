@@ -3,7 +3,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePassengerProfileDto } from './dto/create-passenger-profile.dto';
 import { UpdatePassengerProfileDto } from './dto/update-passenger-profile.dto';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
-
 @Injectable()
 export class PassengerService {
   constructor(private prisma: PrismaService) {}
@@ -72,6 +71,36 @@ export class PassengerService {
       }
 
       return profile;
+    }
+
+    async verify(userId: string, dto: UpdatePassengerProfileDto) {
+      const profile = await this.prisma.passengerProfile.findUnique({
+        where: { userId },
+      })
+
+      if (!profile) {
+        throw new NotFoundException('Passenger profile not found');
+      }
+
+      return this.prisma.passengerProfile.update({
+        where: { userId },
+        data: {
+          firstName: dto.firstName,
+          middleName: dto.middleName,
+          lastName: dto.lastName,
+          profilePhoto: dto.profilePhoto,
+          dateOfBirth: dto.dateOfBirth,
+          gender: dto.gender,
+          phone: dto.phone,
+          address: dto.address,
+          city: dto.city,
+          province: dto.province,
+          emergencyName: dto.emergencyName,
+          emergencyPhone: dto.emergencyPhone,
+          emergencyRelation: dto.emergencyRelation,
+          isVerified: true,
+        },
+      });
     }
 
     async getAll(){

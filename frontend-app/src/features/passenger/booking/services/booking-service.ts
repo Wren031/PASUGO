@@ -7,6 +7,10 @@ export const bookingService = {
     return api.createBooking(draft);
   },
 
+  async assignDriverToBooking(bookingId: string, driverId: string): Promise<Booking> {
+    return api.assignDriverToBooking(bookingId, driverId);
+  },
+
   async getNearbyDrivers(from: LatLng, vehicleType?: VehicleType): Promise<AvailableDriver[]> {
     return api.getNearbyDrivers(from, 4, vehicleType);
   },

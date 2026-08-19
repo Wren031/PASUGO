@@ -54,6 +54,10 @@ export function GroceryCheckoutScreen() {
   );
 
   const handlePlaceOrder = () => {
+    if (profile && !profile.identityVerified) {
+      navigation.navigate('VerifyAccount', { next: 'GroceryStores' });
+      return;
+    }
     if (!store) return;
     if (!address) {
       setError('Please choose a delivery address');
