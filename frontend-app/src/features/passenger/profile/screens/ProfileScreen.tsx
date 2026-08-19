@@ -8,11 +8,13 @@ import { Screen } from '@/components/screen/Screen';
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
 import { RatingStars } from '@/components/ui/RatingStars';
-import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
 import { usePassengerProfile } from '../hooks/usePassengerProfile';
+import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
 import { selectUser, useAuthStore } from '@/store/auth-store';
+import { authService } from '@/features/auth/services/auth-service';
 import { formatCurrency, formatDate } from '@/utils/format';
 import type { PassengerStackParamList, PassengerTabParamList } from '@/navigation/types';
+import React from 'react';
 
 type Navigation = CompositeNavigationProp<
   BottomTabNavigationProp<PassengerTabParamList, 'Profile'>,
@@ -22,7 +24,6 @@ type Navigation = CompositeNavigationProp<
 export function ProfileScreen() {
   const navigation = useNavigation<Navigation>();
   const user = useAuthStore(selectUser);
-  const logout = useAuthStore((state) => state.logout);
   const { data: passenger, isLoading } = usePassengerProfile(user?.id ?? '');
   const [logoutOpen, setLogoutOpen] = useState(false);
 
@@ -124,7 +125,7 @@ export function ProfileScreen() {
         onCancel={() => setLogoutOpen(false)}
         onConfirm={() => {
           setLogoutOpen(false);
-          logout();
+          void authService.logout();
         }}
       />
     </Screen>

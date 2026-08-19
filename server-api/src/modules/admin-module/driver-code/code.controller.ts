@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from "@nestjs/common";
+import { Public } from "../../common/decorators/public.decorator";
 import { RegistrationCodeService } from "./code.service";
 import { CreateCodeDto } from "./dto/create-code.dto";
 import { UseRegistrationCodeDto } from "./dto/use-registration-code.dto";
@@ -12,6 +13,7 @@ export class codeController {
         return this.prisma.createRegistrationCode(dto);
     }
 
+    @Public()
     @Post('validate')
     async useRegistrationCode(
     @Body() dto: UseRegistrationCodeDto,

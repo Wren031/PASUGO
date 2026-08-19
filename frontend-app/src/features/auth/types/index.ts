@@ -1,5 +1,5 @@
 export interface LoginFormValues {
-  phone: string;
+  email: string;
   password: string;
 }
 
@@ -44,5 +44,12 @@ export interface RegistrationDraft {
 }
 
 export interface ForgotPasswordFormValues {
-  phone: string;
+  email: string;
+}
+
+export interface ResetPasswordFormValues {
+  email: string;
+  otp: string;
+  newPassword: string;
+  confirmPassword: string;
 }

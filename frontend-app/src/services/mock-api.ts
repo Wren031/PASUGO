@@ -1,43 +1,19 @@
 import { LANDMARKS } from '@/constants/maps';
-import { MOCK_CREDENTIALS } from '@/constants/mock';
 import { ApiError, cloneDeep, computeFare, generateId, mockDelay } from '@/utils/mock';
 import { estimateDurationMin, haversineKm } from '@/utils/geo';
 import { mockData } from './mock-data';
 import type { AvailableDriver, Booking, BookingDraft, FareBreakdown, RideRequest } from '@/types/booking';
 import type { ChartPoint, Driver, DriverEarningBreakdown, DriverTripEarning, EarningsReport } from '@/types/driver';
 import type { AppNotification } from '@/types/notification';
+import type { GroceryOrder, GroceryOrderDraft, GroceryStore } from '@/types/grocery';
 import type { PaymentMethodInfo, PaymentTransaction, TopUpOption, WalletAccount } from '@/types/payment';
 import type { Review, ReviewSubmission } from '@/types/review';
-import type { RegistrationDraft, RegistrationRole } from '@/features/auth/types';
-import type { AuthSession, LoginPayload, User } from '@/types/user';
 import type { Vehicle } from '@/types/vehicle';
 import type { SavedPlace } from '@/types/passenger';
 import type { LatLng } from '@/types/map';
 import type { DocumentInfo } from '@/types/common';
 
 const DRIVER_SHARE = 0.8;
-
-const INVITATION_CODES = [
-  { code: 'HGO-DRV-2026-001', status: 'ACTIVE', expiresAt: '2026-12-31T23:59:59Z' },
-  { code: 'HGO-DRV-2026-002', status: 'ACTIVE', expiresAt: '2026-12-31T23:59:59Z' },
-  { code: 'HGO-DRV-2025-001', status: 'EXPIRED', expiresAt: '2025-12-31T23:59:59Z' },
-] as const;
-
-const MOCK_OTP_BY_ROLE: Record<RegistrationRole, string> = {
-  passenger: '123456',
-  driver: '654321',
-};
-
-function asUser(record: { id: string; role: 'passenger' | 'driver'; name: string; email: string; phone: string; createdAt: string }): User {
-  return {
-    id: record.id,
-    role: record.role,
-    name: record.name,
-    email: record.email,
-    phone: record.phone,
-    createdAt: record.createdAt,
-  };
-}
 
 function toAvailableDriver(driver: Driver, from: LatLng): AvailableDriver {
   const distanceKm = haversineKm(driver.currentLocation, from);
@@ -47,9 +23,10 @@ function toAvailableDriver(driver: Driver, from: LatLng): AvailableDriver {
     rating: driver.rating,
     trips: driver.totalTrips,
     distanceKm,
-    etaMin: Math.max(1, Math.round(distanceKm / 18 * 60) + 1),
+    etaMin: Math.max(1, Math.round((distanceKm / 18) * 60) + 1),
     coordinates: driver.currentLocation,
-    motorcycle: `${driver.motorcycle.brand} ${driver.motorcycle.model}`,
+    vehicleType: driver.vehicleType,
+    vehicleLabel: `${driver.motorcycle.brand} ${driver.motorcycle.model}`,
     plateNumber: driver.motorcycle.plateNumber,
   };
 }
@@ -85,106 +62,6 @@ function seeded(seed: number): number {
 }
 
 export const mockApi = {
-  // ------------------------------------------------------------------ auth
-  async login(payload: LoginPayload): Promise<AuthSession> {
-    await mockDelay(700);
-    const normalized = payload.phone.replace(/[\s-]/g, '');
-    const user = mockData.users.find(
-      (u) => u.phone.replace(/[\s-]/g, '') === normalized && u.password === payload.password,
-    );
-    if (!user) {
-      throw new ApiError('Invalid phone number or password.', 401);
-    }
-    return { token: generateId('tok'), user: asUser(user) };
-  },
-
-  async validateInvitationCode(code: string): Promise<{ code: string; status: string; expiresAt: string }> {
-    await mockDelay(600);
-    const normalized = code.trim().toUpperCase();
-    const match = INVITATION_CODES.find((entry) => entry.code === normalized);
-    const valid =
-      match &&
-      match.status === 'ACTIVE' &&
-      new Date(match.expiresAt).getTime() >= Date.now();
-    if (!match || !valid) {
-      throw new ApiError('This invitation code is invalid or has expired.', 400);
-    }
-    return cloneDeep(match);
-  },
-
-  async checkEmailAvailable(email: string): Promise<void> {
-    await mockDelay(350);
-    const normalized = email.trim().toLowerCase();
-    if (mockData.users.some((u) => u.email.toLowerCase() === normalized)) {
-      throw new ApiError('An account with this email already exists.', 409);
-    }
-  },
-
-  async requestOtp(role: RegistrationRole, email: string): Promise<{ otp: string }> {
-    await mockDelay(500);
-    return { otp: MOCK_OTP_BY_ROLE[role] };
-  },
-
-  async verifyOtp(role: RegistrationRole, email: string, otp: string): Promise<void> {
-    await mockDelay(600);
-    if (otp.trim() !== MOCK_OTP_BY_ROLE[role]) {
-      throw new ApiError('The code you entered is incorrect. Please try again.', 400);
-    }
-  },
-
-  async completeRegistration(draft: RegistrationDraft): Promise<AuthSession> {
-    await mockDelay(900);
-    const profile = draft.profile;
-    if (!profile) {
-      throw new ApiError('Profile information is required.', 400);
-    }
-    const record = {
-      id: generateId(draft.role === 'driver' ? 'd' : 'p'),
-      role: draft.role,
-      name: profile.name,
-      email: draft.email,
-      phone: profile.phone,
-      password: draft.password,
-      createdAt: new Date().toISOString(),
-    };
-    mockData.users.push(record);
-    return { token: generateId('tok'), user: asUser(record) };
-  },
-
-  async googleSignIn(): Promise<AuthSession> {
-    await mockDelay(700);
-    return {
-      token: generateId('tok'),
-      user: {
-        id: generateId('p'),
-        role: 'passenger',
-        name: 'Aiden Reyes',
-        email: 'aiden.reyes@gmail.com',
-        phone: '0918 000 1122',
-        createdAt: new Date().toISOString(),
-      },
-    };
-  },
-
-  async forgotPassword(phone: string): Promise<void> {
-    await mockDelay(600);
-    const normalized = phone.replace(/[\s-]/g, '');
-    const exists = mockData.users.some((u) => u.phone.replace(/[\s-]/g, '') === normalized);
-    if (!exists) {
-      throw new ApiError('No account found with this phone number.', 404);
-    }
-    return;
-  },
-
-  async demoCredentials(): Promise<{ passenger: string; driver: string; password: string }> {
-    await mockDelay(50);
-    return {
-      passenger: MOCK_CREDENTIALS.passenger.phone,
-      driver: MOCK_CREDENTIALS.driver.phone,
-      password: MOCK_CREDENTIALS.defaultPassword,
-    };
-  },
-
   // ------------------------------------------------------------- passengers
   async getPassengerById(id: string) {
     await mockDelay(250);
@@ -233,10 +110,15 @@ export const mockApi = {
     return cloneDeep(driver);
   },
 
-  async getNearbyDrivers(from: LatLng, limit = 4): Promise<AvailableDriver[]> {
+  async getNearbyDrivers(from: LatLng, limit = 4, vehicleType?: 'motorcycle' | 'car'): Promise<AvailableDriver[]> {
     await mockDelay(500);
     return mockData.drivers
-      .filter((d) => d.availability === 'Available' && d.status === 'Active')
+      .filter(
+        (d) =>
+          d.availability === 'Available' &&
+          d.status === 'Active' &&
+          (!vehicleType || d.vehicleType === vehicleType),
+      )
       .map((d) => toAvailableDriver(d, from))
       .sort((a, b) => a.distanceKm - b.distanceKm)
       .slice(0, limit)
@@ -588,6 +470,108 @@ export const mockApi = {
       { label: 'ORCR', description: 'Official receipt and certificate of registration', info: driver.documents.orcr },
       { label: 'NBI Clearance', description: 'National Bureau of Investigation clearance', info: driver.documents.nbi },
     ];
+  },
+
+  // ------------------------------------------------------------------ grocery
+  async getStores(): Promise<GroceryStore[]> {
+    await mockDelay(350);
+    return mockData.stores.map(cloneDeep);
+  },
+
+  async searchStores(query: string): Promise<GroceryStore[]> {
+    await mockDelay(250);
+    const q = query.trim().toLowerCase();
+    if (!q) return mockData.stores.map(cloneDeep);
+    return mockData.stores
+      .filter(
+        (s) =>
+          s.name.toLowerCase().includes(q) ||
+          s.category.toLowerCase().includes(q) ||
+          s.address.toLowerCase().includes(q),
+      )
+      .map(cloneDeep);
+  },
+
+  async getStoreById(storeId: string): Promise<GroceryStore> {
+    await mockDelay(300);
+    const store = mockData.stores.find((s) => s.id === storeId);
+    if (!store) throw new ApiError('Store not found.', 404);
+    return cloneDeep(store);
+  },
+
+  async createGroceryOrder(draft: GroceryOrderDraft): Promise<GroceryOrder> {
+    await mockDelay(700);
+    const now = new Date().toISOString();
+    const order: GroceryOrder = {
+      id: generateId('GO'),
+      ...draft,
+      status: 'Preparing',
+      placedAt: now,
+      timeline: [
+        { id: 'g1', label: 'Order confirmed', timestamp: now, status: 'done' },
+        { id: 'g2', label: 'Store is preparing your items', timestamp: now, status: 'current' },
+        { id: 'g3', label: 'Rider assigned', timestamp: now, status: 'pending' },
+        { id: 'g4', label: 'On the way to you', timestamp: now, status: 'pending' },
+        { id: 'g5', label: 'Delivered', timestamp: now, status: 'pending' },
+      ],
+    };
+    mockData.groceryOrders.unshift(order);
+    return cloneDeep(order);
+  },
+
+  async assignGroceryRider(orderId: string): Promise<GroceryOrder> {
+    await mockDelay(500);
+    const order = mockData.groceryOrders.find((o) => o.id === orderId);
+    if (!order) throw new ApiError('Order not found.', 404);
+    const anchor = order.deliveryCoordinates;
+    const driver = mockData.drivers
+      .filter((d) => d.availability === 'Available' && d.status === 'Active')
+      .map((d) => toAvailableDriver(d, anchor))
+      .sort((a, b) => a.distanceKm - b.distanceKm)[0];
+    if (!driver) throw new ApiError('No riders available right now.', 404);
+    order.rider = driver;
+    order.status = 'Rider Assigned';
+    order.timeline.forEach((event) => {
+      if (event.status === 'current') event.status = 'done';
+    });
+    order.timeline.push({
+      id: `g${order.timeline.length + 1}`,
+      label: 'Rider assigned',
+      description: `${driver.name} will deliver your order`,
+      timestamp: new Date().toISOString(),
+      status: 'current',
+    });
+    return cloneDeep(order);
+  },
+
+  async updateGroceryOrderStatus(
+    orderId: string,
+    status: GroceryOrder['status'],
+    label: string,
+    description?: string,
+  ): Promise<GroceryOrder> {
+    await mockDelay(150);
+    const order = mockData.groceryOrders.find((o) => o.id === orderId);
+    if (!order) throw new ApiError('Order not found.', 404);
+    order.status = status;
+    order.timeline.forEach((event) => {
+      if (event.status === 'current') event.status = 'done';
+    });
+    order.timeline.push({
+      id: `g${order.timeline.length + 1}`,
+      label,
+      description,
+      timestamp: new Date().toISOString(),
+      status: 'current',
+    });
+    return cloneDeep(order);
+  },
+
+  async getGroceryOrderById(orderId: string): Promise<GroceryOrder> {
+    await mockDelay(250);
+    const order = mockData.groceryOrders.find((o) => o.id === orderId);
+    if (!order) throw new ApiError('Order not found.', 404);
+    return cloneDeep(order);
   },
 };
 

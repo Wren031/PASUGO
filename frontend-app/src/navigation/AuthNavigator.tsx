@@ -10,6 +10,7 @@ import { DriverInformationScreen } from '@/features/auth/screens/DriverInformati
 import { DriverDocumentsScreen } from '@/features/auth/screens/DriverDocumentsScreen';
 import { DriverReviewScreen } from '@/features/auth/screens/DriverReviewScreen';
 import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScreen';
+import { ResetPasswordScreen } from '@/features/auth/screens/ResetPasswordScreen';
 import type { AuthStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
@@ -34,6 +35,7 @@ export function AuthNavigator() {
       <Stack.Screen name="DriverDocuments" component={DriverDocumentsScreen} />
       <Stack.Screen name="DriverReview" component={DriverReviewScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
     </Stack.Navigator>
   );
 }

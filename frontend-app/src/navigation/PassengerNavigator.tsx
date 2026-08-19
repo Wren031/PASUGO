@@ -11,6 +11,11 @@ import { AddPaymentMethodScreen } from '@/features/passenger/payments/screens/Ad
 import { SavedPlacesScreen } from '@/features/passenger/saved-places/screens/SavedPlacesScreen';
 import { EditProfileScreen } from '@/features/passenger/profile/screens/EditProfileScreen';
 import { SettingsScreen } from '@/features/passenger/profile/screens/SettingsScreen';
+import { RideBookingScreen } from '@/features/passenger/booking/screens/RideBookingScreen';
+import { GroceryStoresScreen } from '@/features/passenger/grocery/screens/GroceryStoresScreen';
+import { GroceryStoreScreen } from '@/features/passenger/grocery/screens/GroceryStoreScreen';
+import { GroceryCheckoutScreen } from '@/features/passenger/grocery/screens/GroceryCheckoutScreen';
+import { GroceryTrackingScreen } from '@/features/passenger/grocery/screens/GroceryTrackingScreen';
 import type { PassengerStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<PassengerStackParamList>();
@@ -35,6 +40,11 @@ export function PassengerNavigator() {
       <Stack.Screen name="SavedPlaces" component={SavedPlacesScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="RideBooking" component={RideBookingScreen} />
+      <Stack.Screen name="GroceryStores" component={GroceryStoresScreen} />
+      <Stack.Screen name="GroceryStore" component={GroceryStoreScreen} />
+      <Stack.Screen name="GroceryCheckout" component={GroceryCheckoutScreen} options={{ gestureEnabled: false }} />
+      <Stack.Screen name="GroceryTracking" component={GroceryTrackingScreen} options={{ gestureEnabled: false }} />
     </Stack.Navigator>
   );
 }

@@ -1,5 +1,5 @@
 import { api } from '@/services';
-import type { AvailableDriver, Booking, BookingDraft } from '@/types/booking';
+import type { AvailableDriver, Booking, BookingDraft, VehicleType } from '@/types/booking';
 import type { LatLng } from '@/types/map';
 
 export const bookingService = {
@@ -7,8 +7,8 @@ export const bookingService = {
     return api.createBooking(draft);
   },
 
-  async getNearbyDrivers(from: LatLng): Promise<AvailableDriver[]> {
-    return api.getNearbyDrivers(from);
+  async getNearbyDrivers(from: LatLng, vehicleType?: VehicleType): Promise<AvailableDriver[]> {
+    return api.getNearbyDrivers(from, 4, vehicleType);
   },
 
   async cancelBooking(id: string, reason: string): Promise<Booking> {

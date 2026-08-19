@@ -4,8 +4,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Screen } from '@/components/screen/Screen';
 import { GreetingHeader } from '../components/GreetingHeader';
+import { ServiceSelector } from '@/features/passenger/home/components/ServiceSelector';
 import { PromoBanner } from '../components/PromoBanner';
-import { BookingCard } from '../components/BookingCard';
 import { Card } from '@/components/cards/Card';
 import { StatCard } from '@/components/cards/StatCard';
 import { Button } from '@/components/buttons/Button';
@@ -44,7 +44,7 @@ export function DashboardScreen() {
   return (
     <Screen scroll>
       <View className="w-full max-w-2xl self-center gap-5 px-4 pb-8 pt-4 sm:px-6 md:px-8">
-        <GreetingHeader name={passenger.name} rating={passenger.rating} />
+        <GreetingHeader name={passenger.name} rating={passenger.rating} verified={passenger.identityVerified} />
 
         {hasActiveRide && ride && driver ? (
           <Card variant="primary-soft">
@@ -82,12 +82,7 @@ export function DashboardScreen() {
           />
         </View>
 
-        <BookingCard
-          userId={passenger.id}
-          userName={passenger.name}
-          userPhone={passenger.phone}
-          savedPlaces={passenger.savedPlaces}
-        />
+        <ServiceSelector />
 
         <PromoBanner />
       </View>

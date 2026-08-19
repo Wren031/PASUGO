@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
-import { colors } from '@/constants/theme';
+import { TabBar } from '@/components/navigation/TabBar';
 import { DriverDashboardScreen } from '@/features/driver/dashboard/screens/DriverDashboardScreen';
 import { DriverTripsScreen } from '@/features/driver/history/screens/DriverTripsScreen';
 import { DriverEarningsScreen } from '@/features/driver/earnings/screens/DriverEarningsScreen';
@@ -21,20 +21,13 @@ const icons: Record<keyof DriverTabParamList, keyof typeof Feather.glyphMap> = {
 export function DriverTabs() {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: '#94A3B8',
-        tabBarStyle: {
-          borderTopWidth: 1,
-          borderTopColor: '#E2E8F0',
-          backgroundColor: '#FFFFFF',
-        },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
-        tabBarIcon: ({ color, size }) => (
-          <Feather name={icons[route.name]} size={size} color={color} />
-        ),
-      })}
+        tabBarHideOnKeyboard: true,
+      }}
+      tabBar={(props) => (
+        <TabBar {...props} icons={icons} labels={{ Notifications: 'Alerts' }} />
+      )}
     >
       <Tab.Screen name="Home" component={DriverDashboardScreen} />
       <Tab.Screen name="Trips" component={DriverTripsScreen} />

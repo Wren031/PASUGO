@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import React from 'react';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Card } from './Card';
 import { Avatar } from '@/components/ui/Avatar';
 import { RatingStars } from '@/components/ui/RatingStars';
@@ -31,8 +32,13 @@ export function DriverCard({ driver, onPress, selected = false, className }: Dri
           <Text className="text-[15px] font-bold text-ink">{driver.name}</Text>
           <RatingStars value={driver.rating} size={11} showValue />
         </View>
-        <Text className="mt-0.5 text-[12px] text-ink-secondary">
-          {driver.motorcycle} · {driver.plateNumber}
+        <Text className="mt-0.5 flex-row items-center text-[12px] text-ink-secondary">
+          <MaterialCommunityIcons
+            name={driver.vehicleType === 'car' ? 'car' : 'motorbike'}
+            size={12}
+            color="#64748B"
+          />{' '}
+          {driver.vehicleLabel} · {driver.plateNumber}
         </Text>
         <View className="mt-1.5 flex-row items-center gap-2">
           <Badge label={`${formatDistance(driver.distanceKm)} away`} tone="primary" />

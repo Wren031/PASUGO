@@ -9,8 +9,7 @@ export function useRegisterAccount() {
 
   return useMutation({
     mutationFn: async (values: AccountFormValues) => {
-      await authService.checkEmailAvailable(values.email);
-      const { otp } = await authService.requestOtp(role, values.email);
+      const { otp } = await authService.register(role, values.email, values.password);
       setAccount(values.email, values.password);
       return { email: values.email, otp };
     },

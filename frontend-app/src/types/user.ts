@@ -1,21 +1,23 @@
-import type { Role } from './common';
+import type { AccountStatus, Role } from './common';
 
 export interface User {
   id: string;
   role: Role;
-  name: string;
   email: string;
-  phone: string;
+  name?: string;
+  phone?: string;
   photoUrl?: string;
+  status?: AccountStatus;
   createdAt: string;
 }
 
 export interface AuthSession {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
   user: User;
 }
 
 export interface LoginPayload {
-  phone: string;
+  email: string;
   password: string;
 }

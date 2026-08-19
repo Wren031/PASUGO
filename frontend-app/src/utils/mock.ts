@@ -1,7 +1,7 @@
 import { FARE } from '@/constants/fare';
 import { createGeoRoute, estimateDurationMin } from './geo';
 import type { LatLng } from '@/types/map';
-import type { FareBreakdown } from '@/types/booking';
+import type { FareBreakdown, VehicleType } from '@/types/booking';
 
 export const mockDelay = (ms = 400): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
@@ -20,11 +20,16 @@ export class ApiError extends Error {
   }
 }
 
-export function computeFare(pickup: LatLng, dropoff: LatLng): FareBreakdown {
+export function computeFare(
+  pickup: LatLng,
+  dropoff: LatLng,
+  vehicle: VehicleType = 'motorcycle',
+): FareBreakdown {
   const route = createGeoRoute(pickup, dropoff);
-  const baseFare = FARE.baseFare;
-  const distanceCharge = Math.round(route.distanceKm * FARE.perKm);
-  const timeCharge = Math.round(estimateDurationMin(route.distanceKm) * FARE.perMinute);
+  const multiplier = vehicle === 'car' ? FARE.carMultiplier : 1;
+  const baseFare = Math.round(FARE.baseFare * multiplier);
+  const distanceCharge = Math.round(route.distanceKm * FARE.perKm * multiplier);
+  const timeCharge = Math.round(estimateDurationMin(route.distanceKm) * FARE.perMinute * multiplier);
   const bookingFee = FARE.bookingFee;
   const discount = 0;
   const surgeMultiplier = 1;

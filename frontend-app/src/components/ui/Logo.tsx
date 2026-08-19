@@ -1,5 +1,4 @@
-import { Text, View } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Image, Text, View } from 'react-native';
 import { cn } from '@/utils/cn';
 
 interface LogoProps {
@@ -18,9 +17,11 @@ export function Logo({ size = 'md', light = false, className }: LogoProps) {
   const s = sizes[size];
   return (
     <View className={cn('flex-row items-center gap-2', className)}>
-      <View className={cn('h-10 w-10 items-center justify-center rounded-xl', light ? 'bg-white' : 'bg-primary')}>
-        <MaterialCommunityIcons name="motorbike" size={s.icon} color={light ? '#F97316' : '#FFFFFF'} />
-      </View>
+      <Image
+        source={require('../../../assets/icon_hatodgo.png')}
+        style={{ width: s.icon, height: s.icon }}
+        resizeMode="contain"
+      />
       <Text className={cn('font-extrabold tracking-tight', s.text, light ? 'text-white' : 'text-ink')}>
         Hatod<Text className="text-primary">Go</Text>
       </Text>

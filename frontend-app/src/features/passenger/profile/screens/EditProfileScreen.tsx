@@ -21,8 +21,8 @@ export function EditProfileScreen() {
 
   useEffect(() => {
     if (user) {
-      setName(user.name);
-      setPhone(user.phone);
+      setName(user.name ?? '');
+      setPhone(user.phone ?? '');
       setEmail(user.email);
     }
   }, [user?.id]);

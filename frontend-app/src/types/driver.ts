@@ -1,5 +1,6 @@
 import type { AccountStatus, AvailabilityStatus, DocumentInfo, RatingSummary } from './common';
 import type { LatLng } from './map';
+import type { VehicleType } from './booking';
 
 export interface DriverMotorcycle {
   brand: string;
@@ -21,6 +22,8 @@ export interface Driver {
   totalDistanceKm: number;
   availability: AvailabilityStatus;
   status: AccountStatus;
+  identityVerified: boolean;
+  vehicleType: VehicleType;
   joinedAt: string;
   yearsExperience: number;
   motorcycle: DriverMotorcycle;

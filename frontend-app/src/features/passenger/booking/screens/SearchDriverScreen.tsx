@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -25,7 +26,7 @@ export function SearchDriverScreen() {
   const { booking } = route.params;
   const cancelBooking = useCancelBooking();
 
-  const { data: nearbyDrivers, isLoading } = useNearbyDrivers(booking.pickupCoordinates);
+  const { data: nearbyDrivers, isLoading } = useNearbyDrivers(booking.pickupCoordinates, booking.vehicleType);
   const matched = useRef(false);
 
   const assignDriver = (driver: AvailableDriver) => {

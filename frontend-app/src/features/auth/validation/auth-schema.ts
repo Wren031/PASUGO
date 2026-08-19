@@ -7,6 +7,7 @@ import type {
   LoginFormValues,
   OtpFormValues,
   ProfileFormValues,
+  ResetPasswordFormValues,
 } from '../types';
 
 const phoneSchema = z
@@ -27,7 +28,7 @@ const emailSchema = z
   .regex(REGEX.email, 'Enter a valid email address');
 
 export const loginSchema = z.object({
-  phone: phoneSchema,
+  email: emailSchema,
   password: z.string().min(1, 'Password is required'),
 }) satisfies z.ZodType<LoginFormValues>;
 
@@ -56,8 +57,20 @@ export const otpSchema = z.object({
 }) satisfies z.ZodType<OtpFormValues>;
 
 export const forgotPasswordSchema = z.object({
-  phone: phoneSchema,
+  email: emailSchema,
 }) satisfies z.ZodType<ForgotPasswordFormValues>;
+
+export const resetPasswordSchema = z
+  .object({
+    email: emailSchema,
+    otp: z.string().regex(/^\d{6}$/, 'Enter the 6-digit code'),
+    newPassword: passwordSchema,
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  }) satisfies z.ZodType<ResetPasswordFormValues>;
 
 export type LoginSchema = z.infer<typeof loginSchema>;
 export type InvitationCodeSchema = z.infer<typeof invitationCodeSchema>;
@@ -65,6 +78,7 @@ export type AccountSchema = z.infer<typeof accountSchema>;
 export type ProfileSchema = z.infer<typeof profileSchema>;
 export type OtpSchema = z.infer<typeof otpSchema>;
 export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
 
 export function normalizePhone(phone: string): string {
   return phone.replace(/[\s-]/g, '');

@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import React from 'react';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Avatar } from '@/components/ui/Avatar';
 import { RatingStars } from '@/components/ui/RatingStars';
@@ -92,10 +93,14 @@ export function RideStatusCard({
         </View>
         <View className="items-end">
           <View className="flex-row items-center gap-1">
-            <MaterialCommunityIcons name="motorbike" size={14} color="#F97316" />
+            <MaterialCommunityIcons
+              name={driver.vehicleType === 'car' ? 'car' : 'motorbike'}
+              size={14}
+              color="#F97316"
+            />
             <Text className="text-[12px] font-bold text-ink">{driver.plateNumber}</Text>
           </View>
-          <Text className="text-[11px] text-ink-muted">{driver.motorcycle}</Text>
+          <Text className="text-[11px] text-ink-muted">{driver.vehicleLabel}</Text>
         </View>
       </View>
 

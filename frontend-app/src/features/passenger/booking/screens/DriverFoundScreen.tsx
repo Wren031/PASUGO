@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -72,7 +73,10 @@ export function DriverFoundScreen() {
           </View>
 
           <View className="mt-5 flex-row gap-2">
-            <Badge label={driver.motorcycle} tone="neutral" />
+            <Badge
+              label={`${driver.vehicleType === 'car' ? 'Car' : 'Motorcycle'} · ${driver.vehicleLabel}`}
+              tone="neutral"
+            />
             <Badge label={driver.plateNumber} tone="primary" />
           </View>
 

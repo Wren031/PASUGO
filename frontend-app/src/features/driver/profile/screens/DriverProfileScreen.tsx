@@ -8,12 +8,15 @@ import { Screen } from '@/components/screen/Screen';
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
 import { RatingStars } from '@/components/ui/RatingStars';
-import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
+
 import { useDriverProfile } from '@/features/driver/profile/hooks/useDriver';
 import { useAuthStore, selectUser } from '@/store/auth-store';
+import { authService } from '@/features/auth/services/auth-service';
 import { useDriverStore } from '@/store/driver-store';
 import { formatCurrency, formatDate } from '@/utils/format';
 import type { DriverStackParamList, DriverTabParamList } from '@/navigation/types';
+import React from 'react';
+import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
 
 type Navigation = CompositeNavigationProp<
   BottomTabNavigationProp<DriverTabParamList, 'Profile'>,
@@ -23,7 +26,6 @@ type Navigation = CompositeNavigationProp<
 export function DriverProfileScreen() {
   const navigation = useNavigation<Navigation>();
   const user = useAuthStore(selectUser);
-  const logout = useAuthStore((state) => state.logout);
   const { data: driver } = useDriverProfile(user?.id ?? '');
   const [logoutOpen, setLogoutOpen] = useState(false);
 
@@ -46,6 +48,7 @@ export function DriverProfileScreen() {
             <View className="mt-1 flex-row items-center gap-2">
               <RatingStars value={driver.rating} size={13} showValue />
               <Badge label={`${driver.totalTrips} trips`} tone="info" />
+              <Badge label={driver.identityVerified ? 'Verified' : 'Unverified'} tone={driver.identityVerified ? 'success' : 'warning'} />
               <Badge label={driver.availability} tone={driver.availability === 'Available' ? 'success' : 'neutral'} />
             </View>
           ) : null}
@@ -121,7 +124,7 @@ export function DriverProfileScreen() {
         onConfirm={() => {
           setLogoutOpen(false);
           useDriverStore.getState().setOnline(false);
-          logout();
+          void authService.logout();
         }}
       />
     </Screen>

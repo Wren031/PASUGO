@@ -16,6 +16,7 @@ export type AuthStackParamList = {
   DriverDocuments: undefined;
   DriverReview: undefined;
   ForgotPassword: undefined;
+  ResetPassword: { email: string; debugOtp?: string };
 };
 
 export type PassengerTabParamList = {
@@ -38,6 +39,11 @@ export type PassengerStackParamList = {
   SavedPlaces: undefined;
   EditProfile: undefined;
   Settings: undefined;
+  RideBooking: undefined;
+  GroceryStores: undefined;
+  GroceryStore: { storeId: string };
+  GroceryCheckout: undefined;
+  GroceryTracking: { orderId: string; storeId: string };
 };
 
 export type SelectLocationScreenParams = {

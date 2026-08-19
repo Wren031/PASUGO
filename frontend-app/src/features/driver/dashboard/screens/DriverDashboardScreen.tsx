@@ -17,6 +17,7 @@ import { useDriverStore } from '@/store/driver-store';
 import { useAuthStore, selectUser } from '@/store/auth-store';
 import { formatCurrency } from '@/utils/format';
 import type { DriverStackParamList, DriverTabParamList } from '@/navigation/types';
+import React from 'react';
 
 type Navigation = CompositeNavigationProp<
   BottomTabNavigationProp<DriverTabParamList, 'Home'>,
@@ -78,10 +79,22 @@ export function DriverDashboardScreen() {
           <View className="flex-1">
             <Text className="text-[16px] font-extrabold text-ink">{user?.name}</Text>
             {driver ? (
-              <View className="mt-0.5 flex-row items-center gap-2">
-                <RatingStars value={driver.rating} size={12} showValue />
-                <Text className="text-[11px] text-ink-muted">{driver.totalTrips} trips · {driver.yearsExperience} yrs exp</Text>
-              </View>
+              <>
+                <View className="mt-0.5 flex-row items-center gap-2">
+                  <RatingStars value={driver.rating} size={12} showValue />
+                  <Text className="text-[11px] text-ink-muted">{driver.totalTrips} trips · {driver.yearsExperience} yrs exp</Text>
+                </View>
+                <View className="mt-1 flex-row items-center gap-1">
+                  <Feather
+                    name={driver.identityVerified ? 'check-circle' : 'alert-triangle'}
+                    size={11}
+                    color={driver.identityVerified ? '#16A34A' : '#D97706'}
+                  />
+                  <Text className={`text-[11px] font-semibold ${driver.identityVerified ? 'text-green-600' : 'text-amber-600'}`}>
+                    {driver.identityVerified ? 'Verified' : 'Unverified'}
+                  </Text>
+                </View>
+              </>
             ) : null}
           </View>
           <Pressable

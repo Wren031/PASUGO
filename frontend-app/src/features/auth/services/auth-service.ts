@@ -7,15 +7,15 @@ export const authService = {
     return api.login(payload);
   },
 
+  async register(role: RegistrationRole, email: string, password: string): Promise<{ otp?: string }> {
+    return api.register(role, email, password);
+  },
+
   async validateInvitationCode(code: string): Promise<{ code: string; status: string; expiresAt: string }> {
     return api.validateInvitationCode(code);
   },
 
-  async checkEmailAvailable(email: string): Promise<void> {
-    return api.checkEmailAvailable(email);
-  },
-
-  async requestOtp(role: RegistrationRole, email: string): Promise<{ otp: string }> {
+  async requestOtp(role: RegistrationRole, email: string): Promise<{ otp?: string }> {
     return api.requestOtp(role, email);
   },
 
@@ -27,12 +27,16 @@ export const authService = {
     return api.completeRegistration(draft);
   },
 
-  async googleSignIn(): Promise<AuthSession> {
-    return api.googleSignIn();
+  async forgotPassword(email: string): Promise<{ otp?: string }> {
+    return api.forgotPassword(email);
   },
 
-  async forgotPassword(phone: string): Promise<void> {
-    return api.forgotPassword(phone);
+  async resetPassword(email: string, otp: string, newPassword: string): Promise<void> {
+    return api.resetPassword(email, otp, newPassword);
+  },
+
+  async logout(): Promise<void> {
+    return api.logout();
   },
 
   async getDemoCredentials(): Promise<{ passenger: string; driver: string; password: string }> {

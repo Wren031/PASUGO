@@ -3,6 +3,8 @@ import type { LatLng } from './map';
 
 export type PaymentMethod = 'Cash' | 'GCash' | 'Card' | 'Wallet';
 
+export type VehicleType = 'motorcycle' | 'car';
+
 export type TripPhase =
   | 'searching'
   | 'accepted'
@@ -36,6 +38,7 @@ export interface Booking {
   dropoffCoordinates: LatLng;
   distanceKm: number;
   durationMin: number;
+  vehicleType: VehicleType;
   status: BookingStatus;
   paymentMethod: PaymentMethod;
   bookedAt: string;
@@ -55,6 +58,7 @@ export interface BookingDraft {
   dropoffCoordinates: LatLng;
   distanceKm: number;
   durationMin: number;
+  vehicleType: VehicleType;
   paymentMethod: PaymentMethod;
   fare: FareBreakdown;
 }
@@ -67,7 +71,8 @@ export interface AvailableDriver {
   distanceKm: number;
   etaMin: number;
   coordinates: LatLng;
-  motorcycle: string;
+  vehicleType: VehicleType;
+  vehicleLabel: string;
   plateNumber: string;
 }
 

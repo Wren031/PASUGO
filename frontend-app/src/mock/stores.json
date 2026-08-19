@@ -1,0 +1,104 @@
+[
+  {
+    "id": "st-mcdonalds",
+    "name": "McDonald's",
+    "category": "Fast Food",
+    "emoji": "🍔",
+    "rating": 4.4,
+    "deliveryFee": 55,
+    "etaMin": 25,
+    "address": "Cubao, Quezon City",
+    "location": { "latitude": 14.6189, "longitude": 121.0493 },
+    "products": [
+      { "id": "p-mc-burger", "name": "Burger", "description": "Classic beef burger", "price": 125, "unit": "pc", "emoji": "🍔", "category": "Meals" },
+      { "id": "p-mc-fries", "name": "Fries", "description": "Crispy golden fries", "price": 79, "unit": "pc", "emoji": "🍟", "category": "Sides" },
+      { "id": "p-mc-coke", "name": "Coke", "description": "Regular soft drink", "price": 59, "unit": "pc", "emoji": "🥤", "category": "Drinks" },
+      { "id": "p-mc-chicken", "name": "Chicken McDo", "description": "2-pc fried chicken with rice", "price": 149, "unit": "pc", "emoji": "🍗", "category": "Meals" },
+      { "id": "p-mc-filipino", "name": "Burger McDo", "description": "Classic burger with cheese", "price": 165, "unit": "pc", "emoji": "🧀", "category": "Meals" },
+      { "id": "p-mc-mcflurry", "name": "McFlurry", "description": "Soft serve with toppings", "price": 89, "unit": "pc", "emoji": "🍦", "category": "Desserts" },
+      { "id": "p-mc-icedtea", "name": "Iced Tea", "description": "Refreshing iced tea", "price": 55, "unit": "pc", "emoji": "🧋", "category": "Drinks" },
+      { "id": "p-mc-pie", "name": "Apple Pie", "description": "Warm apple pie", "price": 69, "unit": "pc", "emoji": "🥧", "category": "Desserts" }
+    ]
+  },
+  {
+    "id": "st-jollibee",
+    "name": "Jollibee",
+    "category": "Fast Food",
+    "emoji": "🐝",
+    "rating": 4.5,
+    "deliveryFee": 50,
+    "etaMin": 30,
+    "address": "SM North EDSA, Quezon City",
+    "location": { "latitude": 14.6535, "longitude": 121.0324 },
+    "products": [
+      { "id": "p-jb-chickenjoy", "name": "Chickenjoy", "description": "Crispy fried chicken with rice", "price": 149, "unit": "pc", "emoji": "🍗", "category": "Meals" },
+      { "id": "p-jb-spaghetti", "name": "Jolly Spaghetti", "description": "Sweet-style spaghetti", "price": 115, "unit": "pc", "emoji": "🍝", "category": "Meals" },
+      { "id": "p-jb-burger", "name": "Yumburger", "description": "Classic beef yumburger", "price": 69, "unit": "pc", "emoji": "🍔", "category": "Meals" },
+      { "id": "p-jb-fries", "name": "Jolly Crispy Fries", "description": "Golden crispy fries", "price": 65, "unit": "pc", "emoji": "🍟", "category": "Sides" },
+      { "id": "p-jb-palabok", "name": "Jolly Spaghetti with Palabok", "description": "Combination of sweet spaghetti and palabok", "price": 195, "unit": "pc", "emoji": "🍝", "category": "Meals" },
+      { "id": "p-jb-sundae", "name": "Choco Sundae", "description": "Chocolate sundae", "price": 59, "unit": "pc", "emoji": "🍨", "category": "Desserts" },
+      { "id": "p-jb-drink", "name": "Pineapple Juice", "description": "Refreshing juice", "price": 49, "unit": "pc", "emoji": "🧃", "category": "Drinks" }
+    ]
+  },
+  {
+    "id": "st-7eleven",
+    "name": "7-Eleven",
+    "category": "Convenience",
+    "emoji": "🏪",
+    "rating": 4.2,
+    "deliveryFee": 45,
+    "etaMin": 20,
+    "address": "Banawe Street, Quezon City",
+    "location": { "latitude": 14.6268, "longitude": 121.0035 },
+    "products": [
+      { "id": "p-7e-bigbite", "name": "Big Bite Hotdog", "description": "Steamy jumbo hotdog", "price": 65, "unit": "pc", "emoji": "🌭", "category": "Snacks" },
+      { "id": "p-7e-slurpee", "name": "Slurpee", "description": "Frozen drink", "price": 49, "unit": "pc", "emoji": "🥤", "category": "Drinks" },
+      { "id": "p-7e-water", "name": "Mineral Water 1L", "description": "Bottled water", "price": 25, "unit": "btl", "emoji": "💧", "category": "Drinks" },
+      { "id": "p-7e-chips", "name": "Potato Chips", "description": "Classic salted chips", "price": 45, "unit": "bag", "emoji": "🍟", "category": "Snacks" },
+      { "id": "p-7e-coffee", "name": "Hot Coffee", "description": "Brewed hot coffee", "price": 55, "unit": "cup", "emoji": "☕", "category": "Drinks" },
+      { "id": "p-7e-sandwich", "name": "Clubhouse Sandwich", "description": "Ready-to-eat sandwich", "price": 75, "unit": "pc", "emoji": "🥪", "category": "Snacks" },
+      { "id": "p-7e-egg", "name": "Eggs (per piece)", "description": "Fresh eggs", "price": 12, "unit": "pc", "emoji": "🥚", "category": "Groceries" },
+      { "id": "p-7e-bread", "name": "White Bread", "description": "Loaf of white bread", "price": 85, "unit": "loaf", "emoji": "🍞", "category": "Groceries" }
+    ]
+  },
+  {
+    "id": "st-puregold",
+    "name": "Puregold",
+    "category": "Grocery",
+    "emoji": "🛒",
+    "rating": 4.1,
+    "deliveryFee": 70,
+    "etaMin": 45,
+    "address": "Marikina City Hall, Marikina",
+    "location": { "latitude": 14.6353, "longitude": 121.0969 },
+    "products": [
+      { "id": "p-pg-rice", "name": "Rice 1kg", "description": "Premium well-milled rice", "price": 52, "unit": "kg", "emoji": "🍚", "category": "Groceries" },
+      { "id": "p-pg-oil", "name": "Cooking Oil 1L", "description": "Vegetable cooking oil", "price": 115, "unit": "btl", "emoji": "🫙", "category": "Groceries" },
+      { "id": "p-pg-soap", "name": "Bath Soap", "description": "Family-size bath soap", "price": 38, "unit": "pc", "emoji": "🧼", "category": "Household" },
+      { "id": "p-pg-detergent", "name": "Laundry Detergent", "description": "Powder detergent 1kg", "price": 95, "unit": "pack", "emoji": "🧺", "category": "Household" },
+      { "id": "p-pg-milk", "name": "Milk 1L", "description": "Fresh milk", "price": 98, "unit": "btl", "emoji": "🥛", "category": "Groceries" },
+      { "id": "p-pg-coffee", "name": "Instant Coffee 50g", "description": "3-in-1 instant coffee", "price": 89, "unit": "jar", "emoji": "☕", "category": "Groceries" },
+      { "id": "p-pg-biscuit", "name": "Cream Crackers", "description": "Family pack crackers", "price": 68, "unit": "pack", "emoji": "🍪", "category": "Snacks" },
+      { "id": "p-pg-pasta", "name": "Spaghetti Pasta 1kg", "description": "Pasta noodles", "price": 85, "unit": "pack", "emoji": "🍝", "category": "Groceries" }
+    ]
+  },
+  {
+    "id": "st-minimart",
+    "name": "Mini Mart",
+    "category": "Convenience",
+    "emoji": "🥪",
+    "rating": 4.3,
+    "deliveryFee": 40,
+    "etaMin": 18,
+    "address": "Ayala Triangle, Makati",
+    "location": { "latitude": 14.5547, "longitude": 121.0244 },
+    "products": [
+      { "id": "p-mm-croissant", "name": "Butter Croissant", "description": "Freshly baked croissant", "price": 75, "unit": "pc", "emoji": "🥐", "category": "Bakery" },
+      { "id": "p-mm-baguette", "name": "Baguette", "description": "French baguette", "price": 95, "unit": "pc", "emoji": "🥖", "category": "Bakery" },
+      { "id": "p-mm-cake", "name": "Sliced Cake", "description": "Chocolate slice cake", "price": 120, "unit": "slice", "emoji": "🍰", "category": "Bakery" },
+      { "id": "p-mm-salad", "name": "Caesar Salad", "description": "Fresh caesar salad", "price": 145, "unit": "pc", "emoji": "🥗", "category": "Fresh" },
+      { "id": "p-mm-juice", "name": "Fresh Orange Juice", "description": "Freshly squeezed juice", "price": 85, "unit": "cup", "emoji": "🍊", "category": "Drinks" },
+      { "id": "p-mm-yogurt", "name": "Greek Yogurt", "description": "Creamy yogurt cup", "price": 65, "unit": "cup", "emoji": "🍶", "category": "Fresh" }
+    ]
+  }
+]

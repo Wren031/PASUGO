@@ -4,7 +4,7 @@ import { authService } from '../services/auth-service';
 import React from 'react';
 
 interface DemoCredentialsProps {
-  onFill: (phone: string, password: string) => void;
+  onFill: (email: string, password: string) => void;
 }
 
 export function DemoCredentials({ onFill }: DemoCredentialsProps) {

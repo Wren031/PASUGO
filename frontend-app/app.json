@@ -4,7 +4,7 @@
     "slug": "hatodgo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon_hatodgo.png",
     "scheme": "hatodgo",
     "userInterfaceStyle": "light",
     "ios": {
@@ -17,9 +17,9 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#F97316",
-        "foregroundImage": "./assets/android-icon-foreground.png",
+        "foregroundImage": "./assets/icon_hatodgo.png",
         "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "monochromeImage": "./assets/icon_hatodgo.png"
       },
       "package": "ph.hatodgo.app",
       "predictiveBackGestureEnabled": false,

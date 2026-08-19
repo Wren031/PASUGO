@@ -3,6 +3,7 @@ export const FARE = {
   perKm: 15,
   perMinute: 2,
   bookingFee: 15,
+  carMultiplier: 1.7,
   driverCommissionPercent: 20,
   driverSharePercent: 80,
   freeRideMinimum: 0,

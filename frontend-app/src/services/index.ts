@@ -1,16 +1,12 @@
-import { mockApi } from './mock-api';
-import { API_BASE_URL } from './axios';
+import { httpApi } from './http-api';
 
 /**
  * API facade.
  *
- * Today every call resolves through the in-memory mock API so the app can
- * run without a backend. When EXPO_PUBLIC_API_BASE_URL is provided, swap
- * the functions below for real HTTP implementations without touching the
- * feature layers.
+ * Auth always talks to the real server via httpApi; the remaining feature
+ * methods (bookings, payments, ...) still resolve through the in-memory
+ * mock until they are wired up to the backend incrementally.
  */
-export const api = mockApi;
+export const api = httpApi;
 
-export const isMockMode = API_BASE_URL === '';
-
-export { mockApi };
+export { httpApi };
